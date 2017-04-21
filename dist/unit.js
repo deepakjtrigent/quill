@@ -1,5 +1,5 @@
 /*!
- * Quill Editor v1.0.3
+ * Quill Editor v1.0.6
  * https://quilljs.com/
  * Copyright (c) 2014, Jason Chen
  * Copyright (c) 2013, salesforce.com
@@ -70,8 +70,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _quill2 = _interopRequireDefault(_quill);
 
-	__webpack_require__(110);
-
 	__webpack_require__(111);
 
 	__webpack_require__(112);
@@ -111,6 +109,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	__webpack_require__(129);
 
 	__webpack_require__(130);
+
+	__webpack_require__(131);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -201,6 +201,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
+	Object.defineProperty(exports, "__esModule", { value: true });
 	var container_1 = __webpack_require__(3);
 	var format_1 = __webpack_require__(7);
 	var leaf_1 = __webpack_require__(12);
@@ -235,7 +236,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        Store: store_1.default
 	    }
 	};
-	Object.defineProperty(exports, "__esModule", { value: true });
 	exports.default = Parchment;
 
 
@@ -244,18 +244,24 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
+	var __extends = (this && this.__extends) || (function () {
+	    var extendStatics = Object.setPrototypeOf ||
+	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+	    return function (d, b) {
+	        extendStatics(d, b);
+	        function __() { this.constructor = d; }
+	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	    };
+	})();
+	Object.defineProperty(exports, "__esModule", { value: true });
 	var linked_list_1 = __webpack_require__(4);
 	var shadow_1 = __webpack_require__(5);
 	var Registry = __webpack_require__(6);
 	var ContainerBlot = (function (_super) {
 	    __extends(ContainerBlot, _super);
 	    function ContainerBlot() {
-	        _super.apply(this, arguments);
+	        return _super !== null && _super.apply(this, arguments) || this;
 	    }
 	    ContainerBlot.prototype.appendChild = function (other) {
 	        this.insertBefore(other);
@@ -418,6 +424,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	        });
 	        removedNodes.forEach(function (node) {
+	            if (node.parentNode != null &&
+	                (document.body.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_CONTAINED_BY)) {
+	                // Node has not actually been removed
+	                return;
+	            }
 	            var blot = Registry.find(node);
 	            if (blot == null)
 	                return;
@@ -467,7 +478,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	    return blot;
 	}
-	Object.defineProperty(exports, "__esModule", { value: true });
 	exports.default = ContainerBlot;
 
 
@@ -476,6 +486,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports) {
 
 	"use strict";
+	Object.defineProperty(exports, "__esModule", { value: true });
 	var LinkedList = (function () {
 	    function LinkedList() {
 	        this.head = this.tail = undefined;
@@ -484,7 +495,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    LinkedList.prototype.append = function () {
 	        var nodes = [];
 	        for (var _i = 0; _i < arguments.length; _i++) {
-	            nodes[_i - 0] = arguments[_i];
+	            nodes[_i] = arguments[_i];
 	        }
 	        this.insertBefore(nodes[0], undefined);
 	        if (nodes.length > 1) {
@@ -604,7 +615,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 	    return LinkedList;
 	}());
-	Object.defineProperty(exports, "__esModule", { value: true });
 	exports.default = LinkedList;
 
 
@@ -613,6 +623,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
+	Object.defineProperty(exports, "__esModule", { value: true });
 	var Registry = __webpack_require__(6);
 	var ShadowBlot = (function () {
 	    function ShadowBlot(domNode) {
@@ -755,10 +766,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        wrapper.appendChild(this);
 	        return wrapper;
 	    };
-	    ShadowBlot.blotName = 'abstract';
 	    return ShadowBlot;
 	}());
-	Object.defineProperty(exports, "__esModule", { value: true });
+	ShadowBlot.blotName = 'abstract';
 	exports.default = ShadowBlot;
 
 
@@ -767,18 +777,26 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports) {
 
 	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
+	var __extends = (this && this.__extends) || (function () {
+	    var extendStatics = Object.setPrototypeOf ||
+	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+	    return function (d, b) {
+	        extendStatics(d, b);
+	        function __() { this.constructor = d; }
+	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	    };
+	})();
+	Object.defineProperty(exports, "__esModule", { value: true });
 	var ParchmentError = (function (_super) {
 	    __extends(ParchmentError, _super);
 	    function ParchmentError(message) {
+	        var _this = this;
 	        message = '[Parchment] ' + message;
-	        _super.call(this, message);
-	        this.message = message;
-	        this.name = this.constructor.name;
+	        _this = _super.call(this, message) || this;
+	        _this.message = message;
+	        _this.name = _this.constructor.name;
+	        return _this;
 	    }
 	    return ParchmentError;
 	}(Error));
@@ -788,6 +806,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var tags = {};
 	var types = {};
 	exports.DATA_KEY = '__blot';
+	var Scope;
 	(function (Scope) {
 	    Scope[Scope["TYPE"] = 3] = "TYPE";
 	    Scope[Scope["LEVEL"] = 12] = "LEVEL";
@@ -800,8 +819,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    Scope[Scope["BLOCK_ATTRIBUTE"] = 9] = "BLOCK_ATTRIBUTE";
 	    Scope[Scope["INLINE_ATTRIBUTE"] = 5] = "INLINE_ATTRIBUTE";
 	    Scope[Scope["ANY"] = 15] = "ANY";
-	})(exports.Scope || (exports.Scope = {}));
-	var Scope = exports.Scope;
+	})(Scope = exports.Scope || (exports.Scope = {}));
 	;
 	function create(input, value) {
 	    var match = query(input);
@@ -844,7 +862,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    else if (query instanceof HTMLElement) {
 	        var names = (query.getAttribute('class') || '').split(/\s+/);
 	        for (var i in names) {
-	            if (match = classes[names[i]])
+	            match = classes[names[i]];
+	            if (match)
 	                break;
 	        }
 	        match = match || tags[query.tagName];
@@ -859,7 +878,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	function register() {
 	    var Definitions = [];
 	    for (var _i = 0; _i < arguments.length; _i++) {
-	        Definitions[_i - 0] = arguments[_i];
+	        Definitions[_i] = arguments[_i];
 	    }
 	    if (Definitions.length > 1) {
 	        return Definitions.map(function (d) {
@@ -908,11 +927,17 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
+	var __extends = (this && this.__extends) || (function () {
+	    var extendStatics = Object.setPrototypeOf ||
+	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+	    return function (d, b) {
+	        extendStatics(d, b);
+	        function __() { this.constructor = d; }
+	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	    };
+	})();
+	Object.defineProperty(exports, "__esModule", { value: true });
 	var attributor_1 = __webpack_require__(8);
 	var store_1 = __webpack_require__(9);
 	var container_1 = __webpack_require__(3);
@@ -920,7 +945,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var FormatBlot = (function (_super) {
 	    __extends(FormatBlot, _super);
 	    function FormatBlot() {
-	        _super.apply(this, arguments);
+	        return _super !== null && _super.apply(this, arguments) || this;
 	    }
 	    FormatBlot.formats = function (domNode) {
 	        if (typeof this.tagName === 'string') {
@@ -977,7 +1002,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 	    return FormatBlot;
 	}(container_1.default));
-	Object.defineProperty(exports, "__esModule", { value: true });
 	exports.default = FormatBlot;
 
 
@@ -986,6 +1010,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
+	Object.defineProperty(exports, "__esModule", { value: true });
 	var Registry = __webpack_require__(6);
 	var Attributor = (function () {
 	    function Attributor(attrName, keyName, options) {
@@ -1029,7 +1054,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 	    return Attributor;
 	}());
-	Object.defineProperty(exports, "__esModule", { value: true });
 	exports.default = Attributor;
 
 
@@ -1038,6 +1062,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
+	Object.defineProperty(exports, "__esModule", { value: true });
 	var attributor_1 = __webpack_require__(8);
 	var class_1 = __webpack_require__(10);
 	var style_1 = __webpack_require__(11);
@@ -1101,7 +1126,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 	    return AttributorStore;
 	}());
-	Object.defineProperty(exports, "__esModule", { value: true });
 	exports.default = AttributorStore;
 
 
@@ -1110,11 +1134,17 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
+	var __extends = (this && this.__extends) || (function () {
+	    var extendStatics = Object.setPrototypeOf ||
+	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+	    return function (d, b) {
+	        extendStatics(d, b);
+	        function __() { this.constructor = d; }
+	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	    };
+	})();
+	Object.defineProperty(exports, "__esModule", { value: true });
 	var attributor_1 = __webpack_require__(8);
 	function match(node, prefix) {
 	    var className = node.getAttribute('class') || '';
@@ -1125,7 +1155,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var ClassAttributor = (function (_super) {
 	    __extends(ClassAttributor, _super);
 	    function ClassAttributor() {
-	        _super.apply(this, arguments);
+	        return _super !== null && _super.apply(this, arguments) || this;
 	    }
 	    ClassAttributor.keys = function (node) {
 	        return (node.getAttribute('class') || '').split(/\s+/).map(function (name) {
@@ -1154,7 +1184,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 	    return ClassAttributor;
 	}(attributor_1.default));
-	Object.defineProperty(exports, "__esModule", { value: true });
 	exports.default = ClassAttributor;
 
 
@@ -1163,11 +1192,17 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
+	var __extends = (this && this.__extends) || (function () {
+	    var extendStatics = Object.setPrototypeOf ||
+	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+	    return function (d, b) {
+	        extendStatics(d, b);
+	        function __() { this.constructor = d; }
+	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	    };
+	})();
+	Object.defineProperty(exports, "__esModule", { value: true });
 	var attributor_1 = __webpack_require__(8);
 	function camelize(name) {
 	    var parts = name.split('-');
@@ -1179,7 +1214,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var StyleAttributor = (function (_super) {
 	    __extends(StyleAttributor, _super);
 	    function StyleAttributor() {
-	        _super.apply(this, arguments);
+	        return _super !== null && _super.apply(this, arguments) || this;
 	    }
 	    StyleAttributor.keys = function (node) {
 	        return (node.getAttribute('style') || '').split(';').map(function (value) {
@@ -1204,7 +1239,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 	    return StyleAttributor;
 	}(attributor_1.default));
-	Object.defineProperty(exports, "__esModule", { value: true });
 	exports.default = StyleAttributor;
 
 
@@ -1213,17 +1247,23 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
+	var __extends = (this && this.__extends) || (function () {
+	    var extendStatics = Object.setPrototypeOf ||
+	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+	    return function (d, b) {
+	        extendStatics(d, b);
+	        function __() { this.constructor = d; }
+	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	    };
+	})();
+	Object.defineProperty(exports, "__esModule", { value: true });
 	var shadow_1 = __webpack_require__(5);
 	var Registry = __webpack_require__(6);
 	var LeafBlot = (function (_super) {
 	    __extends(LeafBlot, _super);
 	    function LeafBlot() {
-	        _super.apply(this, arguments);
+	        return _super !== null && _super.apply(this, arguments) || this;
 	    }
 	    LeafBlot.value = function (domNode) {
 	        return true;
@@ -1240,13 +1280,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return [this.parent.domNode, offset];
 	    };
 	    LeafBlot.prototype.value = function () {
-	        return (_a = {}, _a[this.statics.blotName] = this.statics.value(this.domNode) || true, _a);
+	        return _a = {}, _a[this.statics.blotName] = this.statics.value(this.domNode) || true, _a;
 	        var _a;
 	    };
-	    LeafBlot.scope = Registry.Scope.INLINE_BLOT;
 	    return LeafBlot;
 	}(shadow_1.default));
-	Object.defineProperty(exports, "__esModule", { value: true });
+	LeafBlot.scope = Registry.Scope.INLINE_BLOT;
 	exports.default = LeafBlot;
 
 
@@ -1255,11 +1294,17 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
+	var __extends = (this && this.__extends) || (function () {
+	    var extendStatics = Object.setPrototypeOf ||
+	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+	    return function (d, b) {
+	        extendStatics(d, b);
+	        function __() { this.constructor = d; }
+	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	    };
+	})();
+	Object.defineProperty(exports, "__esModule", { value: true });
 	var container_1 = __webpack_require__(3);
 	var Registry = __webpack_require__(6);
 	var OBSERVER_CONFIG = {
@@ -1273,13 +1318,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	var ScrollBlot = (function (_super) {
 	    __extends(ScrollBlot, _super);
 	    function ScrollBlot(node) {
-	        var _this = this;
-	        _super.call(this, node);
-	        this.parent = null;
-	        this.observer = new MutationObserver(function (mutations) {
+	        var _this = _super.call(this, node) || this;
+	        _this.parent = null;
+	        _this.observer = new MutationObserver(function (mutations) {
 	            _this.update(mutations);
 	        });
-	        this.observer.observe(this.domNode, OBSERVER_CONFIG);
+	        _this.observer.observe(_this.domNode, OBSERVER_CONFIG);
+	        return _this;
 	    }
 	    ScrollBlot.prototype.detach = function () {
 	        _super.prototype.detach.call(this);
@@ -1381,7 +1426,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                return null;
 	            }
 	        }).forEach(function (blot) {
-	            if (blot == null || blot === _this)
+	            if (blot == null || blot === _this || blot.domNode[Registry.DATA_KEY] == null)
 	                return;
 	            blot.update(blot.domNode[Registry.DATA_KEY].mutations || []);
 	        });
@@ -1390,13 +1435,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	        this.optimize(mutations);
 	    };
-	    ScrollBlot.blotName = 'scroll';
-	    ScrollBlot.defaultChild = 'block';
-	    ScrollBlot.scope = Registry.Scope.BLOCK_BLOT;
-	    ScrollBlot.tagName = 'DIV';
 	    return ScrollBlot;
 	}(container_1.default));
-	Object.defineProperty(exports, "__esModule", { value: true });
+	ScrollBlot.blotName = 'scroll';
+	ScrollBlot.defaultChild = 'block';
+	ScrollBlot.scope = Registry.Scope.BLOCK_BLOT;
+	ScrollBlot.tagName = 'DIV';
 	exports.default = ScrollBlot;
 
 
@@ -1405,11 +1449,17 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
+	var __extends = (this && this.__extends) || (function () {
+	    var extendStatics = Object.setPrototypeOf ||
+	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+	    return function (d, b) {
+	        extendStatics(d, b);
+	        function __() { this.constructor = d; }
+	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	    };
+	})();
+	Object.defineProperty(exports, "__esModule", { value: true });
 	var format_1 = __webpack_require__(7);
 	var Registry = __webpack_require__(6);
 	// Shallow object comparison
@@ -1425,7 +1475,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var InlineBlot = (function (_super) {
 	    __extends(InlineBlot, _super);
 	    function InlineBlot() {
-	        _super.apply(this, arguments);
+	        return _super !== null && _super.apply(this, arguments) || this;
 	    }
 	    InlineBlot.formats = function (domNode) {
 	        if (domNode.tagName === InlineBlot.tagName)
@@ -1468,12 +1518,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	            next.remove();
 	        }
 	    };
-	    InlineBlot.blotName = 'inline';
-	    InlineBlot.scope = Registry.Scope.INLINE_BLOT;
-	    InlineBlot.tagName = 'SPAN';
 	    return InlineBlot;
 	}(format_1.default));
-	Object.defineProperty(exports, "__esModule", { value: true });
+	InlineBlot.blotName = 'inline';
+	InlineBlot.scope = Registry.Scope.INLINE_BLOT;
+	InlineBlot.tagName = 'SPAN';
 	exports.default = InlineBlot;
 
 
@@ -1482,17 +1531,23 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
+	var __extends = (this && this.__extends) || (function () {
+	    var extendStatics = Object.setPrototypeOf ||
+	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+	    return function (d, b) {
+	        extendStatics(d, b);
+	        function __() { this.constructor = d; }
+	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	    };
+	})();
+	Object.defineProperty(exports, "__esModule", { value: true });
 	var format_1 = __webpack_require__(7);
 	var Registry = __webpack_require__(6);
 	var BlockBlot = (function (_super) {
 	    __extends(BlockBlot, _super);
 	    function BlockBlot() {
-	        _super.apply(this, arguments);
+	        return _super !== null && _super.apply(this, arguments) || this;
 	    }
 	    BlockBlot.formats = function (domNode) {
 	        var tagName = Registry.query(BlockBlot.blotName).tagName;
@@ -1501,7 +1556,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return _super.formats.call(this, domNode);
 	    };
 	    BlockBlot.prototype.format = function (name, value) {
-	        if (name === this.statics.blotName && !value) {
+	        if (Registry.query(name, Registry.Scope.BLOCK) == null) {
+	            return;
+	        }
+	        else if (name === this.statics.blotName && !value) {
 	            this.replaceWith(BlockBlot.blotName);
 	        }
 	        else {
@@ -1527,12 +1585,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	            after.parent.insertBefore(blot, after);
 	        }
 	    };
-	    BlockBlot.blotName = 'block';
-	    BlockBlot.scope = Registry.Scope.BLOCK_BLOT;
-	    BlockBlot.tagName = 'P';
 	    return BlockBlot;
 	}(format_1.default));
-	Object.defineProperty(exports, "__esModule", { value: true });
+	BlockBlot.blotName = 'block';
+	BlockBlot.scope = Registry.Scope.BLOCK_BLOT;
+	BlockBlot.tagName = 'P';
 	exports.default = BlockBlot;
 
 
@@ -1541,16 +1598,22 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
+	var __extends = (this && this.__extends) || (function () {
+	    var extendStatics = Object.setPrototypeOf ||
+	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+	    return function (d, b) {
+	        extendStatics(d, b);
+	        function __() { this.constructor = d; }
+	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	    };
+	})();
+	Object.defineProperty(exports, "__esModule", { value: true });
 	var leaf_1 = __webpack_require__(12);
 	var EmbedBlot = (function (_super) {
 	    __extends(EmbedBlot, _super);
 	    function EmbedBlot() {
-	        _super.apply(this, arguments);
+	        return _super !== null && _super.apply(this, arguments) || this;
 	    }
 	    EmbedBlot.formats = function (domNode) {
 	        return undefined;
@@ -1574,7 +1637,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 	    return EmbedBlot;
 	}(leaf_1.default));
-	Object.defineProperty(exports, "__esModule", { value: true });
 	exports.default = EmbedBlot;
 
 
@@ -1583,18 +1645,25 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
+	var __extends = (this && this.__extends) || (function () {
+	    var extendStatics = Object.setPrototypeOf ||
+	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+	    return function (d, b) {
+	        extendStatics(d, b);
+	        function __() { this.constructor = d; }
+	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	    };
+	})();
+	Object.defineProperty(exports, "__esModule", { value: true });
 	var leaf_1 = __webpack_require__(12);
 	var Registry = __webpack_require__(6);
 	var TextBlot = (function (_super) {
 	    __extends(TextBlot, _super);
 	    function TextBlot(node) {
-	        _super.call(this, node);
-	        this.text = this.statics.value(this.domNode);
+	        var _this = _super.call(this, node) || this;
+	        _this.text = _this.statics.value(_this.domNode);
+	        return _this;
 	    }
 	    TextBlot.create = function (value) {
 	        return document.createTextNode(value);
@@ -1662,11 +1731,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    TextBlot.prototype.value = function () {
 	        return this.text;
 	    };
-	    TextBlot.blotName = 'text';
-	    TextBlot.scope = Registry.Scope.INLINE_BLOT;
 	    return TextBlot;
 	}(leaf_1.default));
-	Object.defineProperty(exports, "__esModule", { value: true });
+	TextBlot.blotName = 'text';
+	TextBlot.scope = Registry.Scope.INLINE_BLOT;
 	exports.default = TextBlot;
 
 
@@ -1689,9 +1757,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	__webpack_require__(19);
 
-	var _delta = __webpack_require__(20);
+	var _quillDelta = __webpack_require__(20);
 
-	var _delta2 = _interopRequireDefault(_delta);
+	var _quillDelta2 = _interopRequireDefault(_quillDelta);
 
 	var _editor = __webpack_require__(27);
 
@@ -1781,13 +1849,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    _classCallCheck(this, Quill);
 
-	    options = expandConfig(container, options);
-	    this.container = options.container;
+	    this.options = expandConfig(container, options);
+	    this.container = this.options.container;
 	    if (this.container == null) {
 	      return debug.error('Invalid Quill container', container);
 	    }
-	    if (options.debug) {
-	      Quill.debug(options.debug);
+	    if (this.options.debug) {
+	      Quill.debug(this.options.debug);
 	    }
 	    var html = this.container.innerHTML.trim();
 	    this.container.classList.add('ql-container');
@@ -1796,27 +1864,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.emitter = new _emitter2.default();
 	    this.scroll = _parchment2.default.create(this.root, {
 	      emitter: this.emitter,
-	      whitelist: options.formats
+	      whitelist: this.options.formats
 	    });
 	    this.editor = new _editor2.default(this.scroll, this.emitter);
 	    this.selection = new _selection2.default(this.scroll, this.emitter);
-	    this.theme = new options.theme(this, options);
+	    this.theme = new this.options.theme(this, this.options);
 	    this.keyboard = this.theme.addModule('keyboard');
 	    this.clipboard = this.theme.addModule('clipboard');
 	    this.history = this.theme.addModule('history');
 	    this.theme.init();
+	    var contents = this.clipboard.convert('<div class=\'ql-editor\' style="white-space: normal;">' + html + '<p><br></p></div>');
+	    this.setContents(contents);
+	    this.emitter.on(_emitter2.default.events.EDITOR_CHANGE, function (type) {
+	      if (type === _emitter2.default.events.TEXT_CHANGE) {
+	        _this2.root.classList.toggle('ql-blank', _this2.editor.isBlank());
+	      }
+	    });
 	    this.pasteHTML('<div class=\'ql-editor\' style="white-space: normal;">' + html + '<p><br></p></div>');
 	    this.history.clear();
-	    if (options.readOnly) {
+	    if (this.options.readOnly) {
 	      this.disable();
 	    }
-	    if (options.placeholder) {
-	      this.root.setAttribute('data-placeholder', options.placeholder);
+	    if (this.options.placeholder) {
+	      this.root.setAttribute('data-placeholder', this.options.placeholder);
 	    }
-	    this.root.classList.toggle('ql-blank', this.editor.isBlank());
-	    this.emitter.on(_emitter2.default.events.TEXT_CHANGE, function (delta) {
-	      _this2.root.classList.toggle('ql-blank', _this2.editor.isBlank());
-	    });
 	  }
 
 	  _createClass(Quill, [{
@@ -1840,6 +1911,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'deleteText',
 	    value: function deleteText(index, length, source) {
+	      var _this3 = this;
+
 	      var _overload = overload(index, length, source);
 
 	      var _overload2 = _slicedToArray(_overload, 4);
@@ -1848,11 +1921,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      length = _overload2[1];
 	      source = _overload2[3];
 
-	      var range = this.getSelection();
-	      var change = this.editor.deleteText(index, length, source);
-	      range = shiftRange(range, index, -1 * length, source);
-	      this.setSelection(range, _emitter2.default.sources.SILENT);
-	      return change;
+	      return modify.call(this, source, index, -1 * length, function () {
+	        return _this3.editor.deleteText(index, length, source);
+	      });
 	    }
 	  }, {
 	    key: 'disable',
@@ -1865,6 +1936,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var enabled = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 
 	      this.editor.enable(enabled);
+	      this.container.classList.toggle('ql-disabled', !enabled);
 	      if (!enabled) {
 	        this.blur();
 	      }
@@ -1880,8 +1952,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function format(name, value) {
 	      var source = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : _emitter2.default.sources.API;
 
+	      if (!this.options.strict && !this.isEnabled() && source === _emitter2.default.sources.USER) {
+	        return new _quillDelta2.default();
+	      }
 	      var range = this.getSelection(true);
-	      var change = new _delta2.default();
+	      var change = new _quillDelta2.default();
 	      if (range == null) return change;
 	      if (_parchment2.default.query(name, _parchment2.default.Scope.BLOCK)) {
 	        change = this.formatLine(range, name, value, source);
@@ -1897,6 +1972,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'formatLine',
 	    value: function formatLine(index, length, name, value, source) {
+	      var _this4 = this;
+
 	      var formats = void 0;
 
 	      var _overload3 = overload(index, length, name, value, source);
@@ -1908,15 +1985,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	      formats = _overload4[2];
 	      source = _overload4[3];
 
-	      var range = this.getSelection();
-	      var change = this.editor.formatLine(index, length, formats, source);
-	      this.selection.setRange(range, true, _emitter2.default.sources.SILENT);
-	      this.selection.scrollIntoView();
-	      return change;
+	      return modify.call(this, source, index, 0, function () {
+	        return _this4.editor.formatLine(index, length, formats, source);
+	      });
 	    }
 	  }, {
 	    key: 'formatText',
 	    value: function formatText(index, length, name, value, source) {
+	      var _this5 = this;
+
 	      var formats = void 0;
 
 	      var _overload5 = overload(index, length, name, value, source);
@@ -1928,11 +2005,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      formats = _overload6[2];
 	      source = _overload6[3];
 
-	      var range = this.getSelection();
-	      var change = this.editor.formatText(index, length, formats, source);
-	      this.selection.setRange(range, true, _emitter2.default.sources.SILENT);
-	      this.selection.scrollIntoView();
-	      return change;
+	      return modify.call(this, source, index, 0, function () {
+	        return _this5.editor.formatText(index, length, formats, source);
+	      });
 	    }
 	  }, {
 	    key: 'getBounds',
@@ -2014,19 +2089,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'insertEmbed',
 	    value: function insertEmbed(index, embed, value) {
+	      var _this6 = this;
+
 	      var source = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : Quill.sources.API;
 
-	      var range = this.getSelection();
-	      var change = this.editor.insertEmbed(index, embed, value, source);
-	      range = shiftRange(range, change, source);
-	      this.setSelection(range, _emitter2.default.sources.SILENT);
-	      return change;
+	      return modify.call(this, source, index, null, function () {
+	        return _this6.editor.insertEmbed(index, embed, value, source);
+	      });
 	    }
 	  }, {
 	    key: 'insertText',
 	    value: function insertText(index, text, name, value, source) {
-	      var formats = void 0,
-	          range = this.getSelection();
+	      var _this7 = this;
+
+	      var formats = void 0;
 
 	      var _overload11 = overload(index, 0, name, value, source);
 
@@ -2036,10 +2112,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	      formats = _overload12[2];
 	      source = _overload12[3];
 
-	      var change = this.editor.insertText(index, text, formats, source);
-	      range = shiftRange(range, index, text.length, source);
-	      this.setSelection(range, _emitter2.default.sources.SILENT);
-	      return change;
+	      return modify.call(this, source, index, text.length, function () {
+	        return _this7.editor.insertText(index, text, formats, source);
+	      });
+	    }
+	  }, {
+	    key: 'isEnabled',
+	    value: function isEnabled() {
+	      return !this.container.classList.contains('ql-disabled');
 	    }
 	  }, {
 	    key: 'off',
@@ -2058,20 +2138,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  }, {
 	    key: 'pasteHTML',
-	    value: function pasteHTML(index, html) {
-	      var source = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : _emitter2.default.sources.API;
-
-	      if (typeof index === 'string') {
-	        return this.setContents(this.clipboard.convert(index), html);
-	      } else {
-	        var paste = this.clipboard.convert(html);
-	        return this.updateContents(new _delta2.default().retain(index).concat(paste), source);
-	      }
+	    value: function pasteHTML(index, html, source) {
+	      this.clipboard.dangerouslyPasteHTML(index, html, source);
 	    }
 	  }, {
 	    key: 'removeFormat',
 	    value: function removeFormat(index, length, source) {
-	      var range = this.getSelection();
+	      var _this8 = this;
 
 	      var _overload13 = overload(index, length, source);
 
@@ -2081,17 +2154,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	      length = _overload14[1];
 	      source = _overload14[3];
 
-	      var change = this.editor.removeFormat(index, length, source);
-	      range = shiftRange(range, change, source);
-	      this.setSelection(range, _emitter2.default.sources.SILENT);
-	      return change;
+	      return modify.call(this, source, index, null, function () {
+	        return _this8.editor.removeFormat(index, length, source);
+	      });
 	    }
 	  }, {
 	    key: 'setContents',
 	    value: function setContents(delta) {
 	      var source = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _emitter2.default.sources.API;
 
-	      delta = new _delta2.default(delta).slice();
+	      if (!this.options.strict && !this.isEnabled() && source === _emitter2.default.sources.USER) {
+	        return new _quillDelta2.default();
+	      }
+	      delta = new _quillDelta2.default(delta).slice();
 	      var lastOp = delta.ops[delta.ops.length - 1];
 	      // Quill contents must always end with newline
 	      if (lastOp == null || lastOp.insert[lastOp.insert.length - 1] !== '\n') {
@@ -2123,7 +2198,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function setText(text) {
 	      var source = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _emitter2.default.sources.API;
 
-	      var delta = new _delta2.default().insert(text);
+	      var delta = new _quillDelta2.default().insert(text);
 	      return this.setContents(delta, source);
 	    }
 	  }, {
@@ -2140,9 +2215,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function updateContents(delta) {
 	      var source = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _emitter2.default.sources.API;
 
+	      if (!this.options.strict && !this.isEnabled() && source === _emitter2.default.sources.USER) {
+	        return new _quillDelta2.default();
+	      }
 	      var range = this.getSelection();
 	      if (Array.isArray(delta)) {
-	        delta = new _delta2.default(delta.slice());
+	        delta = new _quillDelta2.default(delta.slice());
 	      }
 	      var change = this.editor.applyDelta(delta, source);
 	      if (range != null) {
@@ -2162,14 +2240,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	  modules: {},
 	  placeholder: '',
 	  readOnly: false,
+	  strict: true,
 	  theme: 'default'
 	};
 	Quill.events = _emitter2.default.events;
 	Quill.sources = _emitter2.default.sources;
-	Quill.version =  false ? 'dev' : ("1.0.3");
+	Quill.version =  false ? 'dev' : ("1.0.6");
 
 	Quill.imports = {
-	  'delta': _delta2.default,
+	  'delta': _quillDelta2.default,
 	  'parchment': _parchment2.default,
 	  'core/module': _module2.default,
 	  'core/theme': _theme2.default
@@ -2184,7 +2263,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      history: true
 	    }
 	  }, userConfig);
-	  if (userConfig.theme == null || userConfig.theme === Quill.DEFAULTS.theme) {
+	  if (!userConfig.theme || userConfig.theme === Quill.DEFAULTS.theme) {
 	    userConfig.theme = _theme2.default;
 	  } else {
 	    userConfig.theme = Quill.import('themes/' + userConfig.theme);
@@ -2212,7 +2291,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return config;
 	  }, {});
 	  // Special case toolbar shorthand
-	  if (userConfig.modules != null && userConfig.modules.toolbar != null && userConfig.modules.toolbar.constructor !== Object) {
+	  if (userConfig.modules != null && userConfig.modules.toolbar && userConfig.modules.toolbar.constructor !== Object) {
 	    userConfig.modules.toolbar = {
 	      container: userConfig.modules.toolbar
 	    };
@@ -2223,7 +2302,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	      userConfig[key] = document.querySelector(userConfig[key]);
 	    }
 	  });
+	  userConfig.modules = Object.keys(userConfig.modules).reduce(function (config, name) {
+	    if (userConfig.modules[name]) {
+	      config[name] = userConfig.modules[name];
+	    }
+	    return config;
+	  }, {});
 	  return userConfig;
+	}
+
+	function modify(source, index, shift, modifier) {
+	  var change = new _quillDelta2.default();
+	  if (!this.options.strict && !this.isEnabled() && source === _emitter2.default.sources.USER) {
+	    return new _quillDelta2.default();
+	  }
+	  var range = this.getSelection();
+	  change = modifier();
+	  if (range != null) {
+	    if (shift === null) {
+	      range = shiftRange(range, index, change, source);
+	    } else if (shift !== 0) {
+	      range = shiftRange(range, index, shift, source);
+	    }
+	    this.setSelection(range, _emitter2.default.sources.SILENT);
+	  }
+	  return change;
 	}
 
 	function overload(index, length, name, value, source) {
@@ -2258,7 +2361,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (range == null) return null;
 	  var start = void 0,
 	      end = void 0;
-	  if (index instanceof _delta2.default) {
+	  if (index instanceof _quillDelta2.default) {
 	    var _map = [range.index, range.index + range.length].map(function (pos) {
 	      return index.transformPosition(pos, source === _emitter2.default.sources.USER);
 	    });
@@ -2441,6 +2544,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return this;
 	};
 
+	Delta.prototype.filter = function (predicate) {
+	  return this.ops.filter(predicate);
+	};
+
+	Delta.prototype.forEach = function (predicate) {
+	  this.ops.forEach(predicate);
+	};
+
+	Delta.prototype.map = function (predicate) {
+	  return this.ops.map(predicate);
+	};
+
+	Delta.prototype.reduce = function (predicate, initial) {
+	  return this.ops.reduce(predicate, initial);
+	};
+
 	Delta.prototype.chop = function () {
 	  var lastOp = this.ops[this.ops.length - 1];
 	  if (lastOp && lastOp.retain && !lastOp.attributes) {
@@ -2450,7 +2569,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	Delta.prototype.length = function () {
-	  return this.ops.reduce(function (length, elem) {
+	  return this.reduce(function (length, elem) {
 	    return length + op.length(elem);
 	  }, 0);
 	};
@@ -2564,6 +2683,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  });
 	  return delta.chop();
+	};
+
+	Delta.prototype.eachLine = function (predicate, newline) {
+	  newline = newline || '\n';
+	  var iter = op.iterator(this.ops);
+	  var line = new Delta();
+	  while (iter.hasNext()) {
+	    if (iter.peekType() !== 'insert') return;
+	    var thisOp = iter.peek();
+	    var start = op.length(thisOp) - iter.peekLength();
+	    var index = typeof thisOp.insert === 'string' ?
+	      thisOp.insert.indexOf(newline, start) - start : -1;
+	    if (index < 0) {
+	      line.push(iter.next());
+	    } else if (index > 0) {
+	      line.push(iter.next(index));
+	    } else {
+	      predicate(line, iter.next(1).attributes || {});
+	      line = new Delta();
+	    }
+	  }
+	  if (line.length() > 0) {
+	    predicate(line, {});
+	  }
 	};
 
 	Delta.prototype.transform = function (other, priority) {
@@ -3672,6 +3815,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	};
 
+	Iterator.prototype.peek = function () {
+	  return this.ops[this.index];
+	};
+
 	Iterator.prototype.peekLength = function () {
 	  if (this.ops[this.index]) {
 	    // Should never return 0 if our index is being managed correctly
@@ -3714,9 +3861,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _delta = __webpack_require__(20);
+	var _quillDelta = __webpack_require__(20);
 
-	var _delta2 = _interopRequireDefault(_delta);
+	var _quillDelta2 = _interopRequireDefault(_quillDelta);
 
 	var _op = __webpack_require__(26);
 
@@ -3841,7 +3988,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var source = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : _emitter4.default.sources.API;
 
 	      this.scroll.deleteAt(index, length);
-	      return this.update(new _delta2.default().retain(index).delete(length), source);
+	      return this.update(new _quillDelta2.default().retain(index).delete(length), source);
 	    }
 	  }, {
 	    key: 'enable',
@@ -3875,7 +4022,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        });
 	      });
 	      this.scroll.optimize();
-	      return this.update(new _delta2.default().retain(index).retain(length, (0, _clone2.default)(formats)), source);
+	      return this.update(new _quillDelta2.default().retain(index).retain(length, (0, _clone2.default)(formats)), source);
 	    }
 	  }, {
 	    key: 'formatText',
@@ -3888,7 +4035,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      Object.keys(formats).forEach(function (format) {
 	        _this3.scroll.formatAt(index, length, format, formats[format]);
 	      });
-	      return this.update(new _delta2.default().retain(index).retain(length, (0, _clone2.default)(formats)), source);
+	      return this.update(new _quillDelta2.default().retain(index).retain(length, (0, _clone2.default)(formats)), source);
 	    }
 	  }, {
 	    key: 'getContents',
@@ -3900,7 +4047,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function getDelta() {
 	      return this.scroll.lines().reduce(function (delta, line) {
 	        return delta.concat(line.delta());
-	      }, new _delta2.default());
+	      }, new _quillDelta2.default());
 	    }
 	  }, {
 	    key: 'getFormat',
@@ -3949,7 +4096,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var source = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : _emitter4.default.sources.API;
 
 	      this.scroll.insertAt(index, embed, value);
-	      return this.update(new _delta2.default().retain(index).insert(_defineProperty({}, embed, value)), source);
+	      return this.update(new _quillDelta2.default().retain(index).insert(_defineProperty({}, embed, value)), source);
 	    }
 	  }, {
 	    key: 'insertText',
@@ -3964,7 +4111,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      Object.keys(formats).forEach(function (format) {
 	        _this4.scroll.formatAt(index, text.length, format, formats[format]);
 	      });
-	      return this.update(new _delta2.default().retain(index).insert(text, (0, _clone2.default)(formats)), source);
+	      return this.update(new _quillDelta2.default().retain(index).insert(text, (0, _clone2.default)(formats)), source);
 	    }
 	  }, {
 	    key: 'isBlank',
@@ -3985,7 +4132,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          offset = _scroll$line4[1];
 
 	      var suffixLength = 0,
-	          suffix = new _delta2.default();
+	          suffix = new _quillDelta2.default();
 	      if (line != null) {
 	        if (!(line instanceof _code2.default)) {
 	          suffixLength = line.length() - offset;
@@ -3995,8 +4142,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        suffix = line.delta().slice(offset, offset + suffixLength - 1).insert('\n');
 	      }
 	      var contents = this.getContents(index, length + suffixLength);
-	      var diff = contents.diff(new _delta2.default().insert(text).concat(suffix));
-	      var delta = new _delta2.default().retain(index).concat(diff);
+	      var diff = contents.diff(new _quillDelta2.default().insert(text).concat(suffix));
+	      var delta = new _quillDelta2.default().retain(index).concat(diff);
 	      return this.applyDelta(delta, source);
 	    }
 	  }, {
@@ -4012,16 +4159,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var formats = (0, _block.bubbleFormats)(textBlot);
 	        var index = textBlot.offset(this.scroll);
 	        var oldValue = mutations[0].oldValue.replace(_cursor2.default.CONTENTS, '');
-	        var oldText = new _delta2.default().insert(oldValue);
-	        var newText = new _delta2.default().insert(textBlot.value());
-	        var diffDelta = new _delta2.default().retain(index).concat(oldText.diff(newText));
+	        var oldText = new _quillDelta2.default().insert(oldValue);
+	        var newText = new _quillDelta2.default().insert(textBlot.value());
+	        var diffDelta = new _quillDelta2.default().retain(index).concat(oldText.diff(newText));
 	        change = diffDelta.ops.reduce(function (delta, op) {
 	          if (op.insert) {
 	            return delta.insert(op.insert, formats);
 	          } else {
 	            return delta.push(op);
 	          }
-	        }, new _delta2.default());
+	        }, new _quillDelta2.default());
 	        this.delta = oldDelta.compose(change);
 	      } else {
 	        this.delta = this.getDelta();
@@ -4084,7 +4231,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return delta.insert(text, op.attributes);
 	    }
 	    return delta.push(op);
-	  }, new _delta2.default());
+	  }, new _quillDelta2.default());
 	}
 
 	exports.default = Editor;
@@ -4166,24 +4313,42 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var has = Object.prototype.hasOwnProperty;
-
-	//
-	// We store our EE objects in a plain object whose properties are event names.
-	// If `Object.create(null)` is not supported we prefix the event names with a
-	// `~` to make sure that the built-in object properties are not overridden or
-	// used as an attack vector.
-	// We also assume that `Object.create(null)` is available when the event name
-	// is an ES6 Symbol.
-	//
-	var prefix = typeof Object.create !== 'function' ? '~' : false;
+	var has = Object.prototype.hasOwnProperty
+	  , prefix = '~';
 
 	/**
-	 * Representation of a single EventEmitter function.
+	 * Constructor to create a storage for our `EE` objects.
+	 * An `Events` instance is a plain object whose properties are event names.
 	 *
-	 * @param {Function} fn Event handler to be called.
-	 * @param {Mixed} context Context for function execution.
-	 * @param {Boolean} [once=false] Only emit once
+	 * @constructor
+	 * @api private
+	 */
+	function Events() {}
+
+	//
+	// We try to not inherit from `Object.prototype`. In some engines creating an
+	// instance in this way is faster than calling `Object.create(null)` directly.
+	// If `Object.create(null)` is not supported we prefix the event names with a
+	// character to make sure that the built-in object properties are not
+	// overridden or used as an attack vector.
+	//
+	if (Object.create) {
+	  Events.prototype = Object.create(null);
+
+	  //
+	  // This hack is needed because the `__proto__` property is still inherited in
+	  // some old browsers like Android 4, iPhone 5.1, Opera 11 and Safari 5.
+	  //
+	  if (!new Events().__proto__) prefix = false;
+	}
+
+	/**
+	 * Representation of a single event listener.
+	 *
+	 * @param {Function} fn The listener function.
+	 * @param {Mixed} context The context to invoke the listener with.
+	 * @param {Boolean} [once=false] Specify if the listener is a one-time listener.
+	 * @constructor
 	 * @api private
 	 */
 	function EE(fn, context, once) {
@@ -4193,21 +4358,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 	/**
-	 * Minimal EventEmitter interface that is molded against the Node.js
-	 * EventEmitter interface.
+	 * Minimal `EventEmitter` interface that is molded against the Node.js
+	 * `EventEmitter` interface.
 	 *
 	 * @constructor
 	 * @api public
 	 */
-	function EventEmitter() { /* Nothing to set */ }
-
-	/**
-	 * Hold the assigned EventEmitters by name.
-	 *
-	 * @type {Object}
-	 * @private
-	 */
-	EventEmitter.prototype._events = undefined;
+	function EventEmitter() {
+	  this._events = new Events();
+	  this._eventsCount = 0;
+	}
 
 	/**
 	 * Return an array listing the events for which the emitter has registered
@@ -4217,13 +4377,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @api public
 	 */
 	EventEmitter.prototype.eventNames = function eventNames() {
-	  var events = this._events
-	    , names = []
+	  var names = []
+	    , events
 	    , name;
 
-	  if (!events) return names;
+	  if (this._eventsCount === 0) return names;
 
-	  for (name in events) {
+	  for (name in (events = this._events)) {
 	    if (has.call(events, name)) names.push(prefix ? name.slice(1) : name);
 	  }
 
@@ -4235,16 +4395,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	/**
-	 * Return a list of assigned event listeners.
+	 * Return the listeners registered for a given event.
 	 *
-	 * @param {String} event The events that should be listed.
-	 * @param {Boolean} exists We only need to know if there are listeners.
+	 * @param {String|Symbol} event The event name.
+	 * @param {Boolean} exists Only check if there are listeners.
 	 * @returns {Array|Boolean}
 	 * @api public
 	 */
 	EventEmitter.prototype.listeners = function listeners(event, exists) {
 	  var evt = prefix ? prefix + event : event
-	    , available = this._events && this._events[evt];
+	    , available = this._events[evt];
 
 	  if (exists) return !!available;
 	  if (!available) return [];
@@ -4258,23 +4418,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	/**
-	 * Emit an event to all registered event listeners.
+	 * Calls each of the listeners registered for a given event.
 	 *
-	 * @param {String} event The name of the event.
-	 * @returns {Boolean} Indication if we've emitted an event.
+	 * @param {String|Symbol} event The event name.
+	 * @returns {Boolean} `true` if the event had listeners, else `false`.
 	 * @api public
 	 */
 	EventEmitter.prototype.emit = function emit(event, a1, a2, a3, a4, a5) {
 	  var evt = prefix ? prefix + event : event;
 
-	  if (!this._events || !this._events[evt]) return false;
+	  if (!this._events[evt]) return false;
 
 	  var listeners = this._events[evt]
 	    , len = arguments.length
 	    , args
 	    , i;
 
-	  if ('function' === typeof listeners.fn) {
+	  if (listeners.fn) {
 	    if (listeners.once) this.removeListener(event, listeners.fn, undefined, true);
 
 	    switch (len) {
@@ -4302,6 +4462,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        case 1: listeners[i].fn.call(listeners[i].context); break;
 	        case 2: listeners[i].fn.call(listeners[i].context, a1); break;
 	        case 3: listeners[i].fn.call(listeners[i].context, a1, a2); break;
+	        case 4: listeners[i].fn.call(listeners[i].context, a1, a2, a3); break;
 	        default:
 	          if (!args) for (j = 1, args = new Array(len -1); j < len; j++) {
 	            args[j - 1] = arguments[j];
@@ -4316,115 +4477,118 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	/**
-	 * Register a new EventListener for the given event.
+	 * Add a listener for a given event.
 	 *
-	 * @param {String} event Name of the event.
-	 * @param {Function} fn Callback function.
-	 * @param {Mixed} [context=this] The context of the function.
+	 * @param {String|Symbol} event The event name.
+	 * @param {Function} fn The listener function.
+	 * @param {Mixed} [context=this] The context to invoke the listener with.
+	 * @returns {EventEmitter} `this`.
 	 * @api public
 	 */
 	EventEmitter.prototype.on = function on(event, fn, context) {
 	  var listener = new EE(fn, context || this)
 	    , evt = prefix ? prefix + event : event;
 
-	  if (!this._events) this._events = prefix ? {} : Object.create(null);
-	  if (!this._events[evt]) this._events[evt] = listener;
-	  else {
-	    if (!this._events[evt].fn) this._events[evt].push(listener);
-	    else this._events[evt] = [
-	      this._events[evt], listener
-	    ];
-	  }
+	  if (!this._events[evt]) this._events[evt] = listener, this._eventsCount++;
+	  else if (!this._events[evt].fn) this._events[evt].push(listener);
+	  else this._events[evt] = [this._events[evt], listener];
 
 	  return this;
 	};
 
 	/**
-	 * Add an EventListener that's only called once.
+	 * Add a one-time listener for a given event.
 	 *
-	 * @param {String} event Name of the event.
-	 * @param {Function} fn Callback function.
-	 * @param {Mixed} [context=this] The context of the function.
+	 * @param {String|Symbol} event The event name.
+	 * @param {Function} fn The listener function.
+	 * @param {Mixed} [context=this] The context to invoke the listener with.
+	 * @returns {EventEmitter} `this`.
 	 * @api public
 	 */
 	EventEmitter.prototype.once = function once(event, fn, context) {
 	  var listener = new EE(fn, context || this, true)
 	    , evt = prefix ? prefix + event : event;
 
-	  if (!this._events) this._events = prefix ? {} : Object.create(null);
-	  if (!this._events[evt]) this._events[evt] = listener;
-	  else {
-	    if (!this._events[evt].fn) this._events[evt].push(listener);
-	    else this._events[evt] = [
-	      this._events[evt], listener
-	    ];
-	  }
+	  if (!this._events[evt]) this._events[evt] = listener, this._eventsCount++;
+	  else if (!this._events[evt].fn) this._events[evt].push(listener);
+	  else this._events[evt] = [this._events[evt], listener];
 
 	  return this;
 	};
 
 	/**
-	 * Remove event listeners.
+	 * Remove the listeners of a given event.
 	 *
-	 * @param {String} event The event we want to remove.
-	 * @param {Function} fn The listener that we need to find.
-	 * @param {Mixed} context Only remove listeners matching this context.
-	 * @param {Boolean} once Only remove once listeners.
+	 * @param {String|Symbol} event The event name.
+	 * @param {Function} fn Only remove the listeners that match this function.
+	 * @param {Mixed} context Only remove the listeners that have this context.
+	 * @param {Boolean} once Only remove one-time listeners.
+	 * @returns {EventEmitter} `this`.
 	 * @api public
 	 */
 	EventEmitter.prototype.removeListener = function removeListener(event, fn, context, once) {
 	  var evt = prefix ? prefix + event : event;
 
-	  if (!this._events || !this._events[evt]) return this;
-
-	  var listeners = this._events[evt]
-	    , events = [];
-
-	  if (fn) {
-	    if (listeners.fn) {
-	      if (
-	           listeners.fn !== fn
-	        || (once && !listeners.once)
-	        || (context && listeners.context !== context)
-	      ) {
-	        events.push(listeners);
-	      }
-	    } else {
-	      for (var i = 0, length = listeners.length; i < length; i++) {
-	        if (
-	             listeners[i].fn !== fn
-	          || (once && !listeners[i].once)
-	          || (context && listeners[i].context !== context)
-	        ) {
-	          events.push(listeners[i]);
-	        }
-	      }
-	    }
+	  if (!this._events[evt]) return this;
+	  if (!fn) {
+	    if (--this._eventsCount === 0) this._events = new Events();
+	    else delete this._events[evt];
+	    return this;
 	  }
 
-	  //
-	  // Reset the array, or remove it completely if we have no more listeners.
-	  //
-	  if (events.length) {
-	    this._events[evt] = events.length === 1 ? events[0] : events;
+	  var listeners = this._events[evt];
+
+	  if (listeners.fn) {
+	    if (
+	         listeners.fn === fn
+	      && (!once || listeners.once)
+	      && (!context || listeners.context === context)
+	    ) {
+	      if (--this._eventsCount === 0) this._events = new Events();
+	      else delete this._events[evt];
+	    }
 	  } else {
-	    delete this._events[evt];
+	    for (var i = 0, events = [], length = listeners.length; i < length; i++) {
+	      if (
+	           listeners[i].fn !== fn
+	        || (once && !listeners[i].once)
+	        || (context && listeners[i].context !== context)
+	      ) {
+	        events.push(listeners[i]);
+	      }
+	    }
+
+	    //
+	    // Reset the array, or remove it completely if we have no more listeners.
+	    //
+	    if (events.length) this._events[evt] = events.length === 1 ? events[0] : events;
+	    else if (--this._eventsCount === 0) this._events = new Events();
+	    else delete this._events[evt];
 	  }
 
 	  return this;
 	};
 
 	/**
-	 * Remove all listeners or only the listeners for the specified event.
+	 * Remove all listeners, or those of the specified event.
 	 *
-	 * @param {String} event The event want to remove all listeners for.
+	 * @param {String|Symbol} [event] The event name.
+	 * @returns {EventEmitter} `this`.
 	 * @api public
 	 */
 	EventEmitter.prototype.removeAllListeners = function removeAllListeners(event) {
-	  if (!this._events) return this;
+	  var evt;
 
-	  if (event) delete this._events[prefix ? prefix + event : event];
-	  else this._events = prefix ? {} : Object.create(null);
+	  if (event) {
+	    evt = prefix ? prefix + event : event;
+	    if (this._events[evt]) {
+	      if (--this._eventsCount === 0) this._events = new Events();
+	      else delete this._events[evt];
+	    }
+	  } else {
+	    this._events = new Events();
+	    this._eventsCount = 0;
+	  }
 
 	  return this;
 	};
@@ -4446,6 +4610,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	// Expose the prefix.
 	//
 	EventEmitter.prefixed = prefix;
+
+	//
+	// Allow `EventEmitter` to be imported as module namespace.
+	//
+	EventEmitter.EventEmitter = EventEmitter;
 
 	//
 	// Expose the module.
@@ -4507,9 +4676,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
-	var _delta = __webpack_require__(20);
+	var _quillDelta = __webpack_require__(20);
 
-	var _delta2 = _interopRequireDefault(_delta);
+	var _quillDelta2 = _interopRequireDefault(_quillDelta);
 
 	var _parchment = __webpack_require__(2);
 
@@ -4571,7 +4740,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	      return text.split('\n').reduce(function (delta, frag) {
 	        return delta.insert(frag).insert('\n', _this3.formats());
-	      }, new _delta2.default());
+	      }, new _quillDelta2.default());
 	    }
 	  }, {
 	    key: 'format',
@@ -4710,9 +4879,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _extend2 = _interopRequireDefault(_extend);
 
-	var _delta = __webpack_require__(20);
+	var _quillDelta = __webpack_require__(20);
 
-	var _delta2 = _interopRequireDefault(_delta);
+	var _quillDelta2 = _interopRequireDefault(_quillDelta);
 
 	var _parchment = __webpack_require__(2);
 
@@ -4762,7 +4931,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'delta',
 	    value: function delta() {
-	      return new _delta2.default().insert(this.value(), (0, _extend2.default)(this.formats(), this.attributes.values()));
+	      return new _quillDelta2.default().insert(this.value(), (0, _extend2.default)(this.formats(), this.attributes.values()));
 	    }
 	  }, {
 	    key: 'format',
@@ -4819,7 +4988,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          } else {
 	            return delta.insert(leaf.value(), bubbleFormats(leaf));
 	          }
-	        }, new _delta2.default()).insert('\n', bubbleFormats(this));
+	        }, new _quillDelta2.default()).insert('\n', bubbleFormats(this));
 	      }
 	      return this.cache.delta;
 	    }
@@ -4992,6 +5161,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function insertInto(parent, ref) {
 	      if (parent.children.length === 0) {
 	        _get(Break.prototype.__proto__ || Object.getPrototypeOf(Break.prototype), 'insertInto', this).call(this, parent, ref);
+	      } else {
+	        this.remove();
 	      }
 	    }
 	  }, {
@@ -5114,6 +5285,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _get(Inline.prototype.__proto__ || Object.getPrototypeOf(Inline.prototype), 'formatAt', this).call(this, index, length, name, value);
 	      }
 	    }
+	  }, {
+	    key: 'optimize',
+	    value: function optimize() {
+	      _get(Inline.prototype.__proto__ || Object.getPrototypeOf(Inline.prototype), 'optimize', this).call(this);
+	      var ref = this.parent.parent;
+	      if (this.parent instanceof Inline && Inline.compare(this.statics.blotName, this.parent.statics.blotName) > 0) {
+	        var parent = this.parent.isolate(this.offset(), this.length());
+	        this.moveChildren(parent);
+	        parent.wrap(this);
+	      }
+	    }
 	  }], [{
 	    key: 'compare',
 	    value: function compare(self, other) {
@@ -5201,6 +5383,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _embed = __webpack_require__(34);
 
 	var _embed2 = _interopRequireDefault(_embed);
+
+	var _text = __webpack_require__(36);
+
+	var _text2 = _interopRequireDefault(_text);
 
 	var _emitter = __webpack_require__(28);
 
@@ -5292,29 +5478,46 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (this.parent == null) return;
 	      var textNode = this.textNode;
 	      var range = this.selection.getNativeRange();
+	      var restoreText = void 0,
+	          start = void 0,
+	          end = void 0;
+	      if (range != null && range.start.node === textNode && range.end.node === textNode) {
+	        var _ref = [textNode, range.start.offset, range.end.offset];
+	        restoreText = _ref[0];
+	        start = _ref[1];
+	        end = _ref[2];
+	      }
 	      // Link format will insert text outside of anchor tag
 	      while (this.domNode.lastChild != null && this.domNode.lastChild !== this.textNode) {
 	        this.domNode.parentNode.insertBefore(this.domNode.lastChild, this.domNode);
 	      }
 	      if (this.textNode.data !== Cursor.CONTENTS) {
-	        this.textNode.data = this.textNode.data.split(Cursor.CONTENTS).join('');
-	        this.parent.insertBefore(_parchment2.default.create(this.textNode), this);
-	        this.textNode = document.createTextNode(Cursor.CONTENTS);
-	        this.domNode.appendChild(this.textNode);
+	        var text = this.textNode.data.split(Cursor.CONTENTS).join('');
+	        if (this.next instanceof _text2.default) {
+	          restoreText = this.next.domNode;
+	          this.next.insertAt(0, text);
+	          this.textNode.data = Cursor.CONTENTS;
+	        } else {
+	          this.textNode.data = text;
+	          this.parent.insertBefore(_parchment2.default.create(this.textNode), this);
+	          this.textNode = document.createTextNode(Cursor.CONTENTS);
+	          this.domNode.appendChild(this.textNode);
+	        }
 	      }
 	      this.remove();
-	      if (range != null && range.start.node === textNode && range.end.node === textNode) {
-	        this.selection.emitter.once(_emitter2.default.events.SCROLL_OPTIMIZE, function () {
-	          var _map = [range.start.offset, range.end.offset].map(function (offset) {
-	            return Math.max(0, Math.min(textNode.data.length, offset - 1));
-	          }),
-	              _map2 = _slicedToArray(_map, 2),
-	              start = _map2[0],
-	              end = _map2[1];
-
-	          _this2.selection.setNativeRange(textNode, start, textNode, end);
+	      if (start == null) return;
+	      this.selection.emitter.once(_emitter2.default.events.SCROLL_OPTIMIZE, function () {
+	        var _map = [start, end].map(function (offset) {
+	          return Math.max(0, Math.min(restoreText.data.length, offset - 1));
 	        });
-	      }
+
+	        var _map2 = _slicedToArray(_map, 2);
+
+	        start = _map2[0];
+	        end = _map2[1];
+
+	        _this2.selection.setNativeRange(restoreText, start, restoreText, end);
+	      });
 	    }
 	  }, {
 	    key: 'update',
@@ -5352,6 +5555,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	var clone = (function() {
 	'use strict';
 
+	var nativeMap;
+	try {
+	  nativeMap = Map;
+	} catch(_) {
+	  // maybe a reference error because no `Map`. Give it a dummy value that no
+	  // value will ever be an instanceof.
+	  nativeMap = function() {};
+	}
+
+	var nativeSet;
+	try {
+	  nativeSet = Set;
+	} catch(_) {
+	  nativeSet = function() {};
+	}
+
+	var nativePromise;
+	try {
+	  nativePromise = Promise;
+	} catch(_) {
+	  nativePromise = function() {};
+	}
+
 	/**
 	 * Clones (copies) an Object using deep copying.
 	 *
@@ -5376,7 +5602,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    depth = circular.depth;
 	    prototype = circular.prototype;
 	    filter = circular.filter;
-	    circular = circular.circular
+	    circular = circular.circular;
 	  }
 	  // maintain two arrays for circular references, where corresponding parents
 	  // and children have the same index
@@ -5397,7 +5623,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (parent === null)
 	      return null;
 
-	    if (depth == 0)
+	    if (depth === 0)
 	      return parent;
 
 	    var child;
@@ -5406,7 +5632,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return parent;
 	    }
 
-	    if (clone.__isArray(parent)) {
+	    if (parent instanceof nativeMap) {
+	      child = new nativeMap();
+	    } else if (parent instanceof nativeSet) {
+	      child = new nativeSet();
+	    } else if (parent instanceof nativePromise) {
+	      child = new nativePromise(function (resolve, reject) {
+	        parent.then(function(value) {
+	          resolve(_clone(value, depth - 1));
+	        }, function(err) {
+	          reject(_clone(err, depth - 1));
+	        });
+	      });
+	    } else if (clone.__isArray(parent)) {
 	      child = [];
 	    } else if (clone.__isRegExp(parent)) {
 	      child = new RegExp(parent.source, __getRegExpFlags(parent));
@@ -5438,6 +5676,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	      allChildren.push(child);
 	    }
 
+	    if (parent instanceof nativeMap) {
+	      var keyIterator = parent.keys();
+	      while(true) {
+	        var next = keyIterator.next();
+	        if (next.done) {
+	          break;
+	        }
+	        var keyChild = _clone(next.value, depth - 1);
+	        var valueChild = _clone(parent.get(next.value), depth - 1);
+	        child.set(keyChild, valueChild);
+	      }
+	    }
+	    if (parent instanceof nativeSet) {
+	      var iterator = parent.keys();
+	      while(true) {
+	        var next = iterator.next();
+	        if (next.done) {
+	          break;
+	        }
+	        var entryChild = _clone(next.value, depth - 1);
+	        child.add(entryChild);
+	      }
+	    }
+
 	    for (var i in parent) {
 	      var attrs;
 	      if (proto) {
@@ -5448,6 +5710,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	        continue;
 	      }
 	      child[i] = _clone(parent[i], depth - 1);
+	    }
+
+	    if (Object.getOwnPropertySymbols) {
+	      var symbols = Object.getOwnPropertySymbols(parent);
+	      for (var i = 0; i < symbols.length; i++) {
+	        // Don't need to worry about cloning a symbol because it is a primitive,
+	        // like a number or string.
+	        var symbol = symbols[i];
+	        child[symbol] = _clone(parent[symbol], depth - 1);
+	      }
 	    }
 
 	    return child;
@@ -5476,22 +5748,22 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function __objToStr(o) {
 	  return Object.prototype.toString.call(o);
-	};
+	}
 	clone.__objToStr = __objToStr;
 
 	function __isDate(o) {
 	  return typeof o === 'object' && __objToStr(o) === '[object Date]';
-	};
+	}
 	clone.__isDate = __isDate;
 
 	function __isArray(o) {
 	  return typeof o === 'object' && __objToStr(o) === '[object Array]';
-	};
+	}
 	clone.__isArray = __isArray;
 
 	function __isRegExp(o) {
 	  return typeof o === 'object' && __objToStr(o) === '[object RegExp]';
-	};
+	}
 	clone.__isRegExp = __isRegExp;
 
 	function __getRegExpFlags(re) {
@@ -5500,7 +5772,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (re.ignoreCase) flags += 'i';
 	  if (re.multiline) flags += 'm';
 	  return flags;
-	};
+	}
 	clone.__getRegExpFlags = __getRegExpFlags;
 
 	return clone;
@@ -5786,7 +6058,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function getRange() {
 	      var _this2 = this;
 
-	      if (!this.hasFocus()) return [null, null];
 	      var range = this.getNativeRange();
 	      if (range == null) return [null, null];
 	      var positions = [[range.start.node, range.start.offset]];
@@ -6213,6 +6484,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'line',
 	    value: function line(index) {
+	      if (index === this.length()) {
+	        return this.line(index - 1);
+	      }
 	      return this.descendant(isLine, index);
 	    }
 	  }, {
@@ -6299,9 +6573,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _delta = __webpack_require__(20);
+	var _quillDelta = __webpack_require__(20);
 
-	var _delta2 = _interopRequireDefault(_delta);
+	var _quillDelta2 = _interopRequireDefault(_quillDelta);
 
 	var _parchment = __webpack_require__(2);
 
@@ -6346,6 +6620,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	var debug = (0, _logger2.default)('quill:clipboard');
 
 	var CLIPBOARD_CONFIG = [[Node.TEXT_NODE, matchText], ['br', matchBreak], [Node.ELEMENT_NODE, matchNewline], [Node.ELEMENT_NODE, matchBlot], [Node.ELEMENT_NODE, matchSpacing], [Node.ELEMENT_NODE, matchAttributor], [Node.ELEMENT_NODE, matchStyles], ['b', matchAlias.bind(matchAlias, 'bold')], ['i', matchAlias.bind(matchAlias, 'italic')], ['style', matchIgnore]];
+
+	var ATTRIBUTE_ATTRIBUTORS = [_align.AlignAttribute, _direction.DirectionAttribute].reduce(function (memo, attr) {
+	  memo[attr.keyName] = attr;
+	  return memo;
+	}, {});
 
 	var STYLE_ATTRIBUTORS = [_align.AlignStyle, _background.BackgroundStyle, _color.ColorStyle, _direction.DirectionStyle, _font.FontStyle, _size.SizeStyle].reduce(function (memo, attr) {
 	  memo[attr.keyName] = attr;
@@ -6413,7 +6692,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (node.nodeType === node.TEXT_NODE) {
 	          return textMatchers.reduce(function (delta, matcher) {
 	            return matcher(node, delta);
-	          }, new _delta2.default());
+	          }, new _quillDelta2.default());
 	        } else if (node.nodeType === node.ELEMENT_NODE) {
 	          return [].reduce.call(node.childNodes || [], function (delta, childNode) {
 	            var childrenDelta = traverse(childNode);
@@ -6426,31 +6705,44 @@ return /******/ (function(modules) { // webpackBootstrap
 	              }, childrenDelta);
 	            }
 	            return delta.concat(childrenDelta);
-	          }, new _delta2.default());
+	          }, new _quillDelta2.default());
 	        } else {
-	          return new _delta2.default();
+	          return new _quillDelta2.default();
 	        }
 	      };
 	      var delta = traverse(this.container);
 	      // Remove trailing newline
 	      if (deltaEndsWith(delta, '\n') && delta.ops[delta.ops.length - 1].attributes == null) {
-	        delta = delta.compose(new _delta2.default().retain(delta.length() - 1).delete(1));
+	        delta = delta.compose(new _quillDelta2.default().retain(delta.length() - 1).delete(1));
 	      }
 	      debug.log('convert', this.container.innerHTML, delta);
 	      this.container.innerHTML = '';
 	      return delta;
 	    }
 	  }, {
+	    key: 'dangerouslyPasteHTML',
+	    value: function dangerouslyPasteHTML(index, html) {
+	      var source = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : _quill2.default.sources.API;
+
+	      if (typeof index === 'string') {
+	        return this.quill.setContents(this.convert(index), html);
+	      } else {
+	        var paste = this.convert(html);
+	        return this.quill.updateContents(new _quillDelta2.default().retain(index).concat(paste), source);
+	      }
+	    }
+	  }, {
 	    key: 'onPaste',
 	    value: function onPaste(e) {
 	      var _this3 = this;
 
-	      if (e.defaultPrevented) return;
+	      if (e.defaultPrevented || !this.quill.isEnabled()) return;
 	      var range = this.quill.getSelection();
-	      var delta = new _delta2.default().retain(range.index).delete(range.length);
+	      var delta = new _quillDelta2.default().retain(range.index).delete(range.length);
 	      var bodyTop = document.body.scrollTop;
 	      this.container.focus();
 	      setTimeout(function () {
+	        _this3.quill.selection.update(_quill2.default.sources.SILENT);
 	        delta = delta.concat(_this3.convert());
 	        _this3.quill.updateContents(delta, _quill2.default.sources.USER);
 	        // range.length contributes to delta.length()
@@ -6491,7 +6783,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 	function matchAlias(format, node, delta) {
-	  return delta.compose(new _delta2.default().retain(delta.length(), _defineProperty({}, format, true)));
+	  return delta.compose(new _quillDelta2.default().retain(delta.length(), _defineProperty({}, format, true)));
 	}
 
 	function matchAttributor(node, delta) {
@@ -6505,13 +6797,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	      formats[attr.attrName] = attr.value(node);
 	      if (formats[attr.attrName]) return;
 	    }
+	    if (ATTRIBUTE_ATTRIBUTORS[name] != null) {
+	      attr = ATTRIBUTE_ATTRIBUTORS[name];
+	      formats[attr.attrName] = attr.value(node);
+	    }
 	    if (STYLE_ATTRIBUTORS[name] != null) {
 	      attr = STYLE_ATTRIBUTORS[name];
 	      formats[attr.attrName] = attr.value(node);
 	    }
 	  });
 	  if (Object.keys(formats).length > 0) {
-	    delta = delta.compose(new _delta2.default().retain(delta.length(), formats));
+	    delta = delta.compose(new _quillDelta2.default().retain(delta.length(), formats));
 	  }
 	  return delta;
 	}
@@ -6524,11 +6820,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var value = match.value(node);
 	    if (value != null) {
 	      embed[match.blotName] = value;
-	      delta = new _delta2.default().insert(embed, match.formats(node));
+	      delta = new _quillDelta2.default().insert(embed, match.formats(node));
 	    }
 	  } else if (typeof match.formats === 'function') {
 	    var formats = _defineProperty({}, match.blotName, match.formats(node));
-	    delta = delta.compose(new _delta2.default().retain(delta.length(), formats));
+	    delta = delta.compose(new _quillDelta2.default().retain(delta.length(), formats));
 	  }
 	  return delta;
 	}
@@ -6541,7 +6837,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 	function matchIgnore(node, delta) {
-	  return new _delta2.default();
+	  return new _quillDelta2.default();
 	}
 
 	function matchNewline(node, delta) {
@@ -6568,11 +6864,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    formats.bold = true;
 	  }
 	  if (Object.keys(formats).length > 0) {
-	    delta = delta.compose(new _delta2.default().retain(delta.length(), formats));
+	    delta = delta.compose(new _quillDelta2.default().retain(delta.length(), formats));
 	  }
 	  if (parseFloat(style.textIndent || 0) > 0) {
 	    // Could be 0.5in
-	    delta = new _delta2.default().insert('\t').concat(delta);
+	    delta = new _quillDelta2.default().insert('\t').concat(delta);
 	  }
 	  return delta;
 	}
@@ -6617,7 +6913,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.AlignStyle = exports.AlignClass = undefined;
+	exports.AlignStyle = exports.AlignClass = exports.AlignAttribute = undefined;
 
 	var _parchment = __webpack_require__(2);
 
@@ -6630,9 +6926,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  whitelist: ['right', 'center', 'justify']
 	};
 
+	var AlignAttribute = new _parchment2.default.Attributor.Attribute('align', 'align', config);
 	var AlignClass = new _parchment2.default.Attributor.Class('align', 'ql-align', config);
 	var AlignStyle = new _parchment2.default.Attributor.Style('align', 'text-align', config);
 
+	exports.AlignAttribute = AlignAttribute;
 	exports.AlignClass = AlignClass;
 	exports.AlignStyle = AlignStyle;
 
@@ -6736,7 +7034,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.DirectionStyle = exports.DirectionClass = undefined;
+	exports.DirectionStyle = exports.DirectionClass = exports.DirectionAttribute = undefined;
 
 	var _parchment = __webpack_require__(2);
 
@@ -6749,9 +7047,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  whitelist: ['rtl']
 	};
 
+	var DirectionAttribute = new _parchment2.default.Attributor.Attribute('direction', 'dir', config);
 	var DirectionClass = new _parchment2.default.Attributor.Class('direction', 'ql-direction', config);
 	var DirectionStyle = new _parchment2.default.Attributor.Style('direction', 'direction', config);
 
+	exports.DirectionAttribute = DirectionAttribute;
 	exports.DirectionClass = DirectionClass;
 	exports.DirectionStyle = DirectionStyle;
 
@@ -6766,11 +7066,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 	exports.FontClass = exports.FontStyle = undefined;
 
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
 	var _parchment = __webpack_require__(2);
 
 	var _parchment2 = _interopRequireDefault(_parchment);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var config = {
 	  scope: _parchment2.default.Scope.INLINE,
@@ -6778,7 +7088,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	var FontClass = new _parchment2.default.Attributor.Class('font', 'ql-font', config);
-	var FontStyle = new _parchment2.default.Attributor.Style('font', 'font-family', config);
+
+	var FontStyleAttributor = function (_Parchment$Attributor) {
+	  _inherits(FontStyleAttributor, _Parchment$Attributor);
+
+	  function FontStyleAttributor() {
+	    _classCallCheck(this, FontStyleAttributor);
+
+	    return _possibleConstructorReturn(this, (FontStyleAttributor.__proto__ || Object.getPrototypeOf(FontStyleAttributor)).apply(this, arguments));
+	  }
+
+	  _createClass(FontStyleAttributor, [{
+	    key: 'value',
+	    value: function value(node) {
+	      return _get(FontStyleAttributor.prototype.__proto__ || Object.getPrototypeOf(FontStyleAttributor.prototype), 'value', this).call(this, node).replace(/["']/g, '');
+	    }
+	  }]);
+
+	  return FontStyleAttributor;
+	}(_parchment2.default.Attributor.Style);
+
+	var FontStyle = new FontStyleAttributor('font', 'font-family', config);
 
 	exports.FontStyle = FontStyle;
 	exports.FontClass = FontClass;
@@ -6910,7 +7240,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        undo: undoDelta
 	      });
 	      if (this.stack.undo.length > this.options.maxStack) {
-	        this.stack.undo.unshift();
+	        this.stack.undo.shift();
 	      }
 	    }
 	  }, {
@@ -7003,9 +7333,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _extend2 = _interopRequireDefault(_extend);
 
-	var _delta = __webpack_require__(20);
+	var _quillDelta = __webpack_require__(20);
 
-	var _delta2 = _interopRequireDefault(_delta);
+	var _quillDelta2 = _interopRequireDefault(_quillDelta);
 
 	var _op = __webpack_require__(26);
 
@@ -7135,7 +7465,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        });
 	        if (bindings.length === 0) return;
 	        var range = _this2.quill.getSelection();
-	        if (range == null) return; // implies we do not have focus
+	        if (range == null || !_this2.quill.hasFocus()) return;
 
 	        var _quill$scroll$line3 = _this2.quill.scroll.line(range.index),
 	            _quill$scroll$line4 = _slicedToArray(_quill$scroll$line3, 2),
@@ -7502,37 +7832,43 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _multiCursor2 = _interopRequireDefault(_multiCursor);
 
-	var _icons = __webpack_require__(70);
+	var _authorship = __webpack_require__(70);
+
+	var _authorship2 = _interopRequireDefault(_authorship);
+
+	var _icons = __webpack_require__(71);
 
 	var _icons2 = _interopRequireDefault(_icons);
 
-	var _picker = __webpack_require__(102);
+	var _picker = __webpack_require__(103);
 
 	var _picker2 = _interopRequireDefault(_picker);
 
-	var _colorPicker = __webpack_require__(104);
+	var _colorPicker = __webpack_require__(105);
 
 	var _colorPicker2 = _interopRequireDefault(_colorPicker);
 
-	var _iconPicker = __webpack_require__(105);
+	var _iconPicker = __webpack_require__(106);
 
 	var _iconPicker2 = _interopRequireDefault(_iconPicker);
 
-	var _tooltip = __webpack_require__(106);
+	var _tooltip = __webpack_require__(107);
 
 	var _tooltip2 = _interopRequireDefault(_tooltip);
 
-	var _bubble = __webpack_require__(107);
+	var _bubble = __webpack_require__(108);
 
 	var _bubble2 = _interopRequireDefault(_bubble);
 
-	var _snow = __webpack_require__(109);
+	var _snow = __webpack_require__(110);
 
 	var _snow2 = _interopRequireDefault(_snow);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	_core2.default.register({
+	  'attributors/attribute/direction': _direction.DirectionAttribute,
+
 	  'attributors/class/align': _align.AlignClass,
 	  'attributors/class/background': _background.BackgroundClass,
 	  'attributors/class/color': _color.ColorClass,
@@ -7580,6 +7916,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  'modules/syntax': _syntax2.default,
 	  'modules/toolbar': _toolbar2.default,
 	  'modules/multi-cursor': _multiCursor2.default,
+	  'modules/authorship': _authorship2.default,
 
 	  'themes/bubble': _bubble2.default,
 	  'themes/snow': _snow2.default,
@@ -7766,9 +8103,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _extend2 = _interopRequireDefault(_extend);
 
-	var _delta = __webpack_require__(20);
+	var _quillDelta = __webpack_require__(20);
 
-	var _delta2 = _interopRequireDefault(_delta);
+	var _quillDelta2 = _interopRequireDefault(_quillDelta);
 
 	var _parchment = __webpack_require__(2);
 
@@ -8282,6 +8619,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+	var ATTRIBUTES = ['alt', 'height', 'width'];
+
 	var Image = function (_Embed) {
 	  _inherits(Image, _Embed);
 
@@ -8294,7 +8633,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(Image, [{
 	    key: 'format',
 	    value: function format(name, value) {
-	      if (name === 'height' || name === 'width') {
+	      if (ATTRIBUTES.indexOf(name) > -1) {
 	        if (value) {
 	          this.domNode.setAttribute(name, value);
 	        } else {
@@ -8316,10 +8655,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'formats',
 	    value: function formats(domNode) {
-	      var formats = {};
-	      if (domNode.hasAttribute('height')) formats['height'] = domNode.getAttribute('height');
-	      if (domNode.hasAttribute('width')) formats['width'] = domNode.getAttribute('width');
-	      return formats;
+	      return ATTRIBUTES.reduce(function (formats, attribute) {
+	        if (domNode.hasAttribute(attribute)) {
+	          formats[attribute] = domNode.getAttribute(attribute);
+	        }
+	        return formats;
+	      }, {});
 	    }
 	  }, {
 	    key: 'match',
@@ -8375,6 +8716,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+	var ATTRIBUTES = ['height', 'width'];
+
 	var Video = function (_BlockEmbed) {
 	  _inherits(Video, _BlockEmbed);
 
@@ -8387,7 +8730,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(Video, [{
 	    key: 'format',
 	    value: function format(name, value) {
-	      if (name === 'height' || name === 'width') {
+	      if (ATTRIBUTES.indexOf(name) > -1) {
 	        if (value) {
 	          this.domNode.setAttribute(name, value);
 	        } else {
@@ -8409,10 +8752,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'formats',
 	    value: function formats(domNode) {
-	      var formats = {};
-	      if (domNode.hasAttribute('height')) formats['height'] = domNode.getAttribute('height');
-	      if (domNode.hasAttribute('width')) formats['width'] = domNode.getAttribute('width');
-	      return formats;
+	      return ATTRIBUTES.reduce(function (formats, attribute) {
+	        if (domNode.hasAttribute(attribute)) {
+	          formats[attribute] = domNode.getAttribute(attribute);
+	        }
+	        return formats;
+	      }, {});
 	    }
 	  }, {
 	    key: 'sanitize',
@@ -8671,9 +9016,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _extend2 = _interopRequireDefault(_extend);
 
-	var _delta = __webpack_require__(20);
+	var _quillDelta = __webpack_require__(20);
 
-	var _delta2 = _interopRequireDefault(_delta);
+	var _quillDelta2 = _interopRequireDefault(_quillDelta);
 
 	var _parchment = __webpack_require__(2);
 
@@ -8731,9 +9076,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _this.handlers = {};
 	    Object.keys(_this.options.handlers).forEach(function (format) {
 	      _this.addHandler(format, _this.options.handlers[format]);
-	    });
-	    _this.container.addEventListener('mousedown', function (e) {
-	      e.preventDefault(); // Prevent blur
 	    });
 	    [].forEach.call(_this.container.querySelectorAll('button, select'), function (input) {
 	      _this.attach(input);
@@ -8812,7 +9154,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        } else if (_parchment2.default.query(format).prototype instanceof _parchment2.default.Embed) {
 	          value = prompt('Enter ' + format);
 	          if (!value) return;
-	          _this2.quill.updateContents(new _delta2.default().retain(range.index).delete(range.length).insert(_defineProperty({}, format, value)), _quill2.default.sources.USER);
+	          _this2.quill.updateContents(new _quillDelta2.default().retain(range.index).delete(range.length).insert(_defineProperty({}, format, value)), _quill2.default.sources.USER);
 	        } else {
 	          _this2.quill.format(format, value, _quill2.default.sources.USER);
 	        }
@@ -9130,242 +9472,369 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	module.exports = {
-	  'align': {
-	    '': __webpack_require__(71),
-	    'center': __webpack_require__(72),
-	    'right': __webpack_require__(73),
-	    'justify': __webpack_require__(74)
-	  },
-	  'background': __webpack_require__(75),
-	  'blockquote': __webpack_require__(76),
-	  'bold': __webpack_require__(77),
-	  'clean': __webpack_require__(78),
-	  'code-block': __webpack_require__(79),
-	  'color': __webpack_require__(80),
-	  'direction': {
-	    '': __webpack_require__(81),
-	    'rtl': __webpack_require__(82)
-	  },
-	  'float': {
-	    'center': __webpack_require__(83),
-	    'full': __webpack_require__(84),
-	    'left': __webpack_require__(85),
-	    'right': __webpack_require__(86)
-	  },
-	  'formula': __webpack_require__(87),
-	  'header': {
-	    '1': __webpack_require__(88),
-	    '2': __webpack_require__(89)
-	  },
-	  'italic': __webpack_require__(90),
-	  'image': __webpack_require__(91),
-	  'indent': {
-	    '+1': __webpack_require__(92),
-	    '-1': __webpack_require__(93)
-	  },
-	  'link': __webpack_require__(94),
-	  'list': {
-	    'ordered': __webpack_require__(95),
-	    'bullet': __webpack_require__(96)
-	  },
-	  'script': {
-	    'sub': __webpack_require__(97),
-	    'super': __webpack_require__(98)
-	  },
-	  'strike': __webpack_require__(99),
-	  'underline': __webpack_require__(100),
-	  'video': __webpack_require__(101)
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = exports.AuthorClass = undefined;
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _parchment = __webpack_require__(2);
+
+	var _parchment2 = _interopRequireDefault(_parchment);
+
+	var _module = __webpack_require__(39);
+
+	var _module2 = _interopRequireDefault(_module);
+
+	var _quill = __webpack_require__(18);
+
+	var _quill2 = _interopRequireDefault(_quill);
+
+	var _quillDelta = __webpack_require__(20);
+
+	var _quillDelta2 = _interopRequireDefault(_quillDelta);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var AuthorClass = new _parchment2.default.Attributor.Class('author', 'ql-author', {
+	  scope: _parchment2.default.Scope.INLINE
+	});
+
+	var Authorship = function (_Module) {
+	  _inherits(Authorship, _Module);
+
+	  function Authorship(quill, options) {
+	    _classCallCheck(this, Authorship);
+
+	    //if(this.options.button) {
+	    //  this.attachButton(options.button);
+	    //}
+	    var _this = _possibleConstructorReturn(this, (Authorship.__proto__ || Object.getPrototypeOf(Authorship)).call(this, quill, options));
+
+	    if (_this.options.enabled) {
+	      _this.enable();
+	    }
+	    _quill2.default.register(AuthorClass, true);
+	    if (!_this.options.authorId) {
+	      return _possibleConstructorReturn(_this);
+	    }
+	    _this.quill.on(_quill2.default.events.EDITOR_CHANGE, function (eventName, delta, oldDelta, source) {
+	      if (eventName == _quill2.default.events.TEXT_CHANGE && source == 'user') {
+	        var authorDelta = new _quillDelta2.default();
+	        var authorFormat = { author: _this.options.authorId };
+	        delta.ops.forEach(function (op) {
+	          if (op.delete) {
+	            return;
+	          }
+	          if (op.insert || op.retain && op.attributes) {
+	            // Add authorship to insert/format
+	            op.attributes = op.attributes || {};
+	            op.attributes.author = _this.options.authorId;
+	            // Apply authorship to our own editor
+	            authorDelta.retain(op.retain || op.insert.length || 1, authorFormat);
+	          } else {
+	            authorDelta.retain(op.retain);
+	          }
+	        });
+	        _this.quill.updateContents(authorDelta, _quill2.default.sources.SILENT);
+	      }
+	    });
+	    _this.addAuthor(_this.options.authorId, _this.options.color);
+	    return _this;
+	  }
+
+	  _createClass(Authorship, [{
+	    key: 'enable',
+	    value: function enable() {
+	      var enabled = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+	      this.quill.root.classList.toggle('ql-authorship', enabled);
+	    }
+	  }, {
+	    key: 'disable',
+	    value: function disable() {
+	      this.enable(false);
+	    }
+	  }, {
+	    key: 'addAuthor',
+	    value: function addAuthor(id, color) {
+	      var css = ".ql-authorship .ql-author-" + id + " { " + "background-color:" + color + "; }\n";
+	      this.addStyle(css);
+	    }
+	  }, {
+	    key: 'addStyle',
+	    value: function addStyle(css) {
+	      if (!this.styleElement) {
+	        this.styleElement = document.createElement('style');
+	        this.styleElement.type = 'text/css';
+	        document.documentElement.getElementsByTagName('head')[0].appendChild(this.styleElement);
+	      }
+	      this.styleElement.sheet.insertRule(css, 0);
+	    }
+	  }]);
+
+	  return Authorship;
+	}(_module2.default);
+
+	Authorship.DEFAULTS = {
+	  authorId: null,
+	  color: 'transparent',
+	  enabled: false
 	};
+
+	exports.AuthorClass = AuthorClass;
+	exports.default = Authorship;
 
 /***/ }),
 /* 71 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-	module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=ql-stroke x1=3 x2=15 y1=9 y2=9></line> <line class=ql-stroke x1=3 x2=13 y1=14 y2=14></line> <line class=ql-stroke x1=3 x2=9 y1=4 y2=4></line> </svg>";
+	'use strict';
+
+	module.exports = {
+	  'align': {
+	    '': __webpack_require__(72),
+	    'center': __webpack_require__(73),
+	    'right': __webpack_require__(74),
+	    'justify': __webpack_require__(75)
+	  },
+	  'background': __webpack_require__(76),
+	  'blockquote': __webpack_require__(77),
+	  'bold': __webpack_require__(78),
+	  'clean': __webpack_require__(79),
+	  'code': __webpack_require__(80),
+	  'code-block': __webpack_require__(80),
+	  'color': __webpack_require__(81),
+	  'direction': {
+	    '': __webpack_require__(82),
+	    'rtl': __webpack_require__(83)
+	  },
+	  'float': {
+	    'center': __webpack_require__(84),
+	    'full': __webpack_require__(85),
+	    'left': __webpack_require__(86),
+	    'right': __webpack_require__(87)
+	  },
+	  'formula': __webpack_require__(88),
+	  'header': {
+	    '1': __webpack_require__(89),
+	    '2': __webpack_require__(90)
+	  },
+	  'italic': __webpack_require__(91),
+	  'image': __webpack_require__(92),
+	  'indent': {
+	    '+1': __webpack_require__(93),
+	    '-1': __webpack_require__(94)
+	  },
+	  'link': __webpack_require__(95),
+	  'list': {
+	    'ordered': __webpack_require__(96),
+	    'bullet': __webpack_require__(97)
+	  },
+	  'script': {
+	    'sub': __webpack_require__(98),
+	    'super': __webpack_require__(99)
+	  },
+	  'strike': __webpack_require__(100),
+	  'underline': __webpack_require__(101),
+	  'video': __webpack_require__(102)
+	};
 
 /***/ }),
 /* 72 */
 /***/ (function(module, exports) {
 
-	module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=ql-stroke x1=15 x2=3 y1=9 y2=9></line> <line class=ql-stroke x1=14 x2=4 y1=14 y2=14></line> <line class=ql-stroke x1=12 x2=6 y1=4 y2=4></line> </svg>";
+	module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=ql-stroke x1=3 x2=15 y1=9 y2=9></line> <line class=ql-stroke x1=3 x2=13 y1=14 y2=14></line> <line class=ql-stroke x1=3 x2=9 y1=4 y2=4></line> </svg>";
 
 /***/ }),
 /* 73 */
 /***/ (function(module, exports) {
 
-	module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=ql-stroke x1=15 x2=3 y1=9 y2=9></line> <line class=ql-stroke x1=15 x2=5 y1=14 y2=14></line> <line class=ql-stroke x1=15 x2=9 y1=4 y2=4></line> </svg>";
+	module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=ql-stroke x1=15 x2=3 y1=9 y2=9></line> <line class=ql-stroke x1=14 x2=4 y1=14 y2=14></line> <line class=ql-stroke x1=12 x2=6 y1=4 y2=4></line> </svg>";
 
 /***/ }),
 /* 74 */
 /***/ (function(module, exports) {
 
-	module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=ql-stroke x1=15 x2=3 y1=9 y2=9></line> <line class=ql-stroke x1=15 x2=3 y1=14 y2=14></line> <line class=ql-stroke x1=15 x2=3 y1=4 y2=4></line> </svg>";
+	module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=ql-stroke x1=15 x2=3 y1=9 y2=9></line> <line class=ql-stroke x1=15 x2=5 y1=14 y2=14></line> <line class=ql-stroke x1=15 x2=9 y1=4 y2=4></line> </svg>";
 
 /***/ }),
 /* 75 */
 /***/ (function(module, exports) {
 
-	module.exports = "<svg viewbox=\"0 0 18 18\"> <g class=\"ql-fill ql-color-label\"> <polygon points=\"6 6.868 6 6 5 6 5 7 5.942 7 6 6.868\"></polygon> <rect height=1 width=1 x=4 y=4></rect> <polygon points=\"6.817 5 6 5 6 6 6.38 6 6.817 5\"></polygon> <rect height=1 width=1 x=2 y=6></rect> <rect height=1 width=1 x=3 y=5></rect> <rect height=1 width=1 x=4 y=7></rect> <polygon points=\"4 11.439 4 11 3 11 3 12 3.755 12 4 11.439\"></polygon> <rect height=1 width=1 x=2 y=12></rect> <rect height=1 width=1 x=2 y=9></rect> <rect height=1 width=1 x=2 y=15></rect> <polygon points=\"4.63 10 4 10 4 11 4.192 11 4.63 10\"></polygon> <rect height=1 width=1 x=3 y=8></rect> <path d=M10.832,4.2L11,4.582V4H10.708A1.948,1.948,0,0,1,10.832,4.2Z></path> <path d=M7,4.582L7.168,4.2A1.929,1.929,0,0,1,7.292,4H7V4.582Z></path> <path d=M8,13H7.683l-0.351.8a1.933,1.933,0,0,1-.124.2H8V13Z></path> <rect height=1 width=1 x=12 y=2></rect> <rect height=1 width=1 x=11 y=3></rect> <path d=M9,3H8V3.282A1.985,1.985,0,0,1,9,3Z></path> <rect height=1 width=1 x=2 y=3></rect> <rect height=1 width=1 x=6 y=2></rect> <rect height=1 width=1 x=3 y=2></rect> <rect height=1 width=1 x=5 y=3></rect> <rect height=1 width=1 x=9 y=2></rect> <rect height=1 width=1 x=15 y=14></rect> <polygon points=\"13.447 10.174 13.469 10.225 13.472 10.232 13.808 11 14 11 14 10 13.37 10 13.447 10.174\"></polygon> <rect height=1 width=1 x=13 y=7></rect> <rect height=1 width=1 x=15 y=5></rect> <rect height=1 width=1 x=14 y=6></rect> <rect height=1 width=1 x=15 y=8></rect> <rect height=1 width=1 x=14 y=9></rect> <path d=M3.775,14H3v1H4V14.314A1.97,1.97,0,0,1,3.775,14Z></path> <rect height=1 width=1 x=14 y=3></rect> <polygon points=\"12 6.868 12 6 11.62 6 12 6.868\"></polygon> <rect height=1 width=1 x=15 y=2></rect> <rect height=1 width=1 x=12 y=5></rect> <rect height=1 width=1 x=13 y=4></rect> <polygon points=\"12.933 9 13 9 13 8 12.495 8 12.933 9\"></polygon> <rect height=1 width=1 x=9 y=14></rect> <rect height=1 width=1 x=8 y=15></rect> <path d=M6,14.926V15H7V14.316A1.993,1.993,0,0,1,6,14.926Z></path> <rect height=1 width=1 x=5 y=15></rect> <path d=M10.668,13.8L10.317,13H10v1h0.792A1.947,1.947,0,0,1,10.668,13.8Z></path> <rect height=1 width=1 x=11 y=15></rect> <path d=M14.332,12.2a1.99,1.99,0,0,1,.166.8H15V12H14.245Z></path> <rect height=1 width=1 x=14 y=15></rect> <rect height=1 width=1 x=15 y=11></rect> </g> <polyline class=ql-stroke points=\"5.5 13 9 5 12.5 13\"></polyline> <line class=ql-stroke x1=11.63 x2=6.38 y1=11 y2=11></line> </svg>";
+	module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=ql-stroke x1=15 x2=3 y1=9 y2=9></line> <line class=ql-stroke x1=15 x2=3 y1=14 y2=14></line> <line class=ql-stroke x1=15 x2=3 y1=4 y2=4></line> </svg>";
 
 /***/ }),
 /* 76 */
 /***/ (function(module, exports) {
 
-	module.exports = "<svg viewbox=\"0 0 18 18\"> <rect class=\"ql-fill ql-stroke\" height=3 width=3 x=4 y=5></rect> <rect class=\"ql-fill ql-stroke\" height=3 width=3 x=11 y=5></rect> <path class=\"ql-even ql-fill ql-stroke\" d=M7,8c0,4.031-3,5-3,5></path> <path class=\"ql-even ql-fill ql-stroke\" d=M14,8c0,4.031-3,5-3,5></path> </svg>";
+	module.exports = "<svg viewbox=\"0 0 18 18\"> <g class=\"ql-fill ql-color-label\"> <polygon points=\"6 6.868 6 6 5 6 5 7 5.942 7 6 6.868\"></polygon> <rect height=1 width=1 x=4 y=4></rect> <polygon points=\"6.817 5 6 5 6 6 6.38 6 6.817 5\"></polygon> <rect height=1 width=1 x=2 y=6></rect> <rect height=1 width=1 x=3 y=5></rect> <rect height=1 width=1 x=4 y=7></rect> <polygon points=\"4 11.439 4 11 3 11 3 12 3.755 12 4 11.439\"></polygon> <rect height=1 width=1 x=2 y=12></rect> <rect height=1 width=1 x=2 y=9></rect> <rect height=1 width=1 x=2 y=15></rect> <polygon points=\"4.63 10 4 10 4 11 4.192 11 4.63 10\"></polygon> <rect height=1 width=1 x=3 y=8></rect> <path d=M10.832,4.2L11,4.582V4H10.708A1.948,1.948,0,0,1,10.832,4.2Z></path> <path d=M7,4.582L7.168,4.2A1.929,1.929,0,0,1,7.292,4H7V4.582Z></path> <path d=M8,13H7.683l-0.351.8a1.933,1.933,0,0,1-.124.2H8V13Z></path> <rect height=1 width=1 x=12 y=2></rect> <rect height=1 width=1 x=11 y=3></rect> <path d=M9,3H8V3.282A1.985,1.985,0,0,1,9,3Z></path> <rect height=1 width=1 x=2 y=3></rect> <rect height=1 width=1 x=6 y=2></rect> <rect height=1 width=1 x=3 y=2></rect> <rect height=1 width=1 x=5 y=3></rect> <rect height=1 width=1 x=9 y=2></rect> <rect height=1 width=1 x=15 y=14></rect> <polygon points=\"13.447 10.174 13.469 10.225 13.472 10.232 13.808 11 14 11 14 10 13.37 10 13.447 10.174\"></polygon> <rect height=1 width=1 x=13 y=7></rect> <rect height=1 width=1 x=15 y=5></rect> <rect height=1 width=1 x=14 y=6></rect> <rect height=1 width=1 x=15 y=8></rect> <rect height=1 width=1 x=14 y=9></rect> <path d=M3.775,14H3v1H4V14.314A1.97,1.97,0,0,1,3.775,14Z></path> <rect height=1 width=1 x=14 y=3></rect> <polygon points=\"12 6.868 12 6 11.62 6 12 6.868\"></polygon> <rect height=1 width=1 x=15 y=2></rect> <rect height=1 width=1 x=12 y=5></rect> <rect height=1 width=1 x=13 y=4></rect> <polygon points=\"12.933 9 13 9 13 8 12.495 8 12.933 9\"></polygon> <rect height=1 width=1 x=9 y=14></rect> <rect height=1 width=1 x=8 y=15></rect> <path d=M6,14.926V15H7V14.316A1.993,1.993,0,0,1,6,14.926Z></path> <rect height=1 width=1 x=5 y=15></rect> <path d=M10.668,13.8L10.317,13H10v1h0.792A1.947,1.947,0,0,1,10.668,13.8Z></path> <rect height=1 width=1 x=11 y=15></rect> <path d=M14.332,12.2a1.99,1.99,0,0,1,.166.8H15V12H14.245Z></path> <rect height=1 width=1 x=14 y=15></rect> <rect height=1 width=1 x=15 y=11></rect> </g> <polyline class=ql-stroke points=\"5.5 13 9 5 12.5 13\"></polyline> <line class=ql-stroke x1=11.63 x2=6.38 y1=11 y2=11></line> </svg>";
 
 /***/ }),
 /* 77 */
 /***/ (function(module, exports) {
 
-	module.exports = "<svg viewbox=\"0 0 18 18\"> <path class=ql-stroke d=M5,4H9.5A2.5,2.5,0,0,1,12,6.5v0A2.5,2.5,0,0,1,9.5,9H5A0,0,0,0,1,5,9V4A0,0,0,0,1,5,4Z></path> <path class=ql-stroke d=M5,9h5.5A2.5,2.5,0,0,1,13,11.5v0A2.5,2.5,0,0,1,10.5,14H5a0,0,0,0,1,0,0V9A0,0,0,0,1,5,9Z></path> </svg>";
+	module.exports = "<svg viewbox=\"0 0 18 18\"> <rect class=\"ql-fill ql-stroke\" height=3 width=3 x=4 y=5></rect> <rect class=\"ql-fill ql-stroke\" height=3 width=3 x=11 y=5></rect> <path class=\"ql-even ql-fill ql-stroke\" d=M7,8c0,4.031-3,5-3,5></path> <path class=\"ql-even ql-fill ql-stroke\" d=M14,8c0,4.031-3,5-3,5></path> </svg>";
 
 /***/ }),
 /* 78 */
 /***/ (function(module, exports) {
 
-	module.exports = "<svg class=\"\" viewbox=\"0 0 18 18\"> <line class=ql-stroke x1=5 x2=13 y1=3 y2=3></line> <line class=ql-stroke x1=6 x2=9.35 y1=12 y2=3></line> <line class=ql-stroke x1=11 x2=15 y1=11 y2=15></line> <line class=ql-stroke x1=15 x2=11 y1=11 y2=15></line> <rect class=ql-fill height=1 rx=0.5 ry=0.5 width=7 x=2 y=14></rect> </svg>";
+	module.exports = "<svg viewbox=\"0 0 18 18\"> <path class=ql-stroke d=M5,4H9.5A2.5,2.5,0,0,1,12,6.5v0A2.5,2.5,0,0,1,9.5,9H5A0,0,0,0,1,5,9V4A0,0,0,0,1,5,4Z></path> <path class=ql-stroke d=M5,9h5.5A2.5,2.5,0,0,1,13,11.5v0A2.5,2.5,0,0,1,10.5,14H5a0,0,0,0,1,0,0V9A0,0,0,0,1,5,9Z></path> </svg>";
 
 /***/ }),
 /* 79 */
 /***/ (function(module, exports) {
 
-	module.exports = "<svg viewbox=\"0 0 18 18\"> <polyline class=\"ql-even ql-stroke\" points=\"5 7 3 9 5 11\"></polyline> <polyline class=\"ql-even ql-stroke\" points=\"13 7 15 9 13 11\"></polyline> <line class=ql-stroke x1=10 x2=8 y1=5 y2=13></line> </svg>";
+	module.exports = "<svg class=\"\" viewbox=\"0 0 18 18\"> <line class=ql-stroke x1=5 x2=13 y1=3 y2=3></line> <line class=ql-stroke x1=6 x2=9.35 y1=12 y2=3></line> <line class=ql-stroke x1=11 x2=15 y1=11 y2=15></line> <line class=ql-stroke x1=15 x2=11 y1=11 y2=15></line> <rect class=ql-fill height=1 rx=0.5 ry=0.5 width=7 x=2 y=14></rect> </svg>";
 
 /***/ }),
 /* 80 */
 /***/ (function(module, exports) {
 
-	module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=\"ql-color-label ql-stroke ql-transparent\" x1=3 x2=15 y1=15 y2=15></line> <polyline class=ql-stroke points=\"5.5 11 9 3 12.5 11\"></polyline> <line class=ql-stroke x1=11.63 x2=6.38 y1=9 y2=9></line> </svg>";
+	module.exports = "<svg viewbox=\"0 0 18 18\"> <polyline class=\"ql-even ql-stroke\" points=\"5 7 3 9 5 11\"></polyline> <polyline class=\"ql-even ql-stroke\" points=\"13 7 15 9 13 11\"></polyline> <line class=ql-stroke x1=10 x2=8 y1=5 y2=13></line> </svg>";
 
 /***/ }),
 /* 81 */
 /***/ (function(module, exports) {
 
-	module.exports = "<svg viewbox=\"0 0 18 18\"> <polygon class=\"ql-stroke ql-fill\" points=\"3 11 5 9 3 7 3 11\"></polygon> <line class=\"ql-stroke ql-fill\" x1=15 x2=11 y1=4 y2=4></line> <path class=ql-fill d=M11,3a3,3,0,0,0,0,6h1V3H11Z></path> <rect class=ql-fill height=11 width=1 x=11 y=4></rect> <rect class=ql-fill height=11 width=1 x=13 y=4></rect> </svg>";
+	module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=\"ql-color-label ql-stroke ql-transparent\" x1=3 x2=15 y1=15 y2=15></line> <polyline class=ql-stroke points=\"5.5 11 9 3 12.5 11\"></polyline> <line class=ql-stroke x1=11.63 x2=6.38 y1=9 y2=9></line> </svg>";
 
 /***/ }),
 /* 82 */
 /***/ (function(module, exports) {
 
-	module.exports = "<svg viewbox=\"0 0 18 18\"> <polygon class=\"ql-stroke ql-fill\" points=\"15 12 13 10 15 8 15 12\"></polygon> <line class=\"ql-stroke ql-fill\" x1=9 x2=5 y1=4 y2=4></line> <path class=ql-fill d=M5,3A3,3,0,0,0,5,9H6V3H5Z></path> <rect class=ql-fill height=11 width=1 x=5 y=4></rect> <rect class=ql-fill height=11 width=1 x=7 y=4></rect> </svg>";
+	module.exports = "<svg viewbox=\"0 0 18 18\"> <polygon class=\"ql-stroke ql-fill\" points=\"3 11 5 9 3 7 3 11\"></polygon> <line class=\"ql-stroke ql-fill\" x1=15 x2=11 y1=4 y2=4></line> <path class=ql-fill d=M11,3a3,3,0,0,0,0,6h1V3H11Z></path> <rect class=ql-fill height=11 width=1 x=11 y=4></rect> <rect class=ql-fill height=11 width=1 x=13 y=4></rect> </svg>";
 
 /***/ }),
 /* 83 */
 /***/ (function(module, exports) {
 
-	module.exports = "<svg viewbox=\"0 0 18 18\"> <path class=ql-fill d=M14,16H4a1,1,0,0,1,0-2H14A1,1,0,0,1,14,16Z /> <path class=ql-fill d=M14,4H4A1,1,0,0,1,4,2H14A1,1,0,0,1,14,4Z /> <rect class=ql-fill x=3 y=6 width=12 height=6 rx=1 ry=1 /> </svg>";
+	module.exports = "<svg viewbox=\"0 0 18 18\"> <polygon class=\"ql-stroke ql-fill\" points=\"15 12 13 10 15 8 15 12\"></polygon> <line class=\"ql-stroke ql-fill\" x1=9 x2=5 y1=4 y2=4></line> <path class=ql-fill d=M5,3A3,3,0,0,0,5,9H6V3H5Z></path> <rect class=ql-fill height=11 width=1 x=5 y=4></rect> <rect class=ql-fill height=11 width=1 x=7 y=4></rect> </svg>";
 
 /***/ }),
 /* 84 */
 /***/ (function(module, exports) {
 
-	module.exports = "<svg viewbox=\"0 0 18 18\"> <path class=ql-fill d=M13,16H5a1,1,0,0,1,0-2h8A1,1,0,0,1,13,16Z /> <path class=ql-fill d=M13,4H5A1,1,0,0,1,5,2h8A1,1,0,0,1,13,4Z /> <rect class=ql-fill x=2 y=6 width=14 height=6 rx=1 ry=1 /> </svg>";
+	module.exports = "<svg viewbox=\"0 0 18 18\"> <path class=ql-fill d=M14,16H4a1,1,0,0,1,0-2H14A1,1,0,0,1,14,16Z /> <path class=ql-fill d=M14,4H4A1,1,0,0,1,4,2H14A1,1,0,0,1,14,4Z /> <rect class=ql-fill x=3 y=6 width=12 height=6 rx=1 ry=1 /> </svg>";
 
 /***/ }),
 /* 85 */
 /***/ (function(module, exports) {
 
-	module.exports = "<svg viewbox=\"0 0 18 18\"> <path class=ql-fill d=M15,8H13a1,1,0,0,1,0-2h2A1,1,0,0,1,15,8Z /> <path class=ql-fill d=M15,12H13a1,1,0,0,1,0-2h2A1,1,0,0,1,15,12Z /> <path class=ql-fill d=M15,16H5a1,1,0,0,1,0-2H15A1,1,0,0,1,15,16Z /> <path class=ql-fill d=M15,4H5A1,1,0,0,1,5,2H15A1,1,0,0,1,15,4Z /> <rect class=ql-fill x=2 y=6 width=8 height=6 rx=1 ry=1 /> </svg>";
+	module.exports = "<svg viewbox=\"0 0 18 18\"> <path class=ql-fill d=M13,16H5a1,1,0,0,1,0-2h8A1,1,0,0,1,13,16Z /> <path class=ql-fill d=M13,4H5A1,1,0,0,1,5,2h8A1,1,0,0,1,13,4Z /> <rect class=ql-fill x=2 y=6 width=14 height=6 rx=1 ry=1 /> </svg>";
 
 /***/ }),
 /* 86 */
 /***/ (function(module, exports) {
 
-	module.exports = "<svg viewbox=\"0 0 18 18\"> <path class=ql-fill d=M5,8H3A1,1,0,0,1,3,6H5A1,1,0,0,1,5,8Z /> <path class=ql-fill d=M5,12H3a1,1,0,0,1,0-2H5A1,1,0,0,1,5,12Z /> <path class=ql-fill d=M13,16H3a1,1,0,0,1,0-2H13A1,1,0,0,1,13,16Z /> <path class=ql-fill d=M13,4H3A1,1,0,0,1,3,2H13A1,1,0,0,1,13,4Z /> <rect class=ql-fill x=8 y=6 width=8 height=6 rx=1 ry=1 transform=\"translate(24 18) rotate(-180)\"/> </svg>";
+	module.exports = "<svg viewbox=\"0 0 18 18\"> <path class=ql-fill d=M15,8H13a1,1,0,0,1,0-2h2A1,1,0,0,1,15,8Z /> <path class=ql-fill d=M15,12H13a1,1,0,0,1,0-2h2A1,1,0,0,1,15,12Z /> <path class=ql-fill d=M15,16H5a1,1,0,0,1,0-2H15A1,1,0,0,1,15,16Z /> <path class=ql-fill d=M15,4H5A1,1,0,0,1,5,2H15A1,1,0,0,1,15,4Z /> <rect class=ql-fill x=2 y=6 width=8 height=6 rx=1 ry=1 /> </svg>";
 
 /***/ }),
 /* 87 */
 /***/ (function(module, exports) {
 
-	module.exports = "<svg viewbox=\"0 0 18 18\"> <path class=ql-fill d=M11.759,2.482a2.561,2.561,0,0,0-3.53.607A7.656,7.656,0,0,0,6.8,6.2C6.109,9.188,5.275,14.677,4.15,14.927a1.545,1.545,0,0,0-1.3-.933A0.922,0.922,0,0,0,2,15.036S1.954,16,4.119,16s3.091-2.691,3.7-5.553c0.177-.826.36-1.726,0.554-2.6L8.775,6.2c0.381-1.421.807-2.521,1.306-2.676a1.014,1.014,0,0,0,1.02.56A0.966,0.966,0,0,0,11.759,2.482Z></path> <rect class=ql-fill height=1.6 rx=0.8 ry=0.8 width=5 x=5.15 y=6.2></rect> <path class=ql-fill d=M13.663,12.027a1.662,1.662,0,0,1,.266-0.276q0.193,0.069.456,0.138a2.1,2.1,0,0,0,.535.069,1.075,1.075,0,0,0,.767-0.3,1.044,1.044,0,0,0,.314-0.8,0.84,0.84,0,0,0-.238-0.619,0.8,0.8,0,0,0-.594-0.239,1.154,1.154,0,0,0-.781.3,4.607,4.607,0,0,0-.781,1q-0.091.15-.218,0.346l-0.246.38c-0.068-.288-0.137-0.582-0.212-0.885-0.459-1.847-2.494-.984-2.941-0.8-0.482.2-.353,0.647-0.094,0.529a0.869,0.869,0,0,1,1.281.585c0.217,0.751.377,1.436,0.527,2.038a5.688,5.688,0,0,1-.362.467,2.69,2.69,0,0,1-.264.271q-0.221-.08-0.471-0.147a2.029,2.029,0,0,0-.522-0.066,1.079,1.079,0,0,0-.768.3A1.058,1.058,0,0,0,9,15.131a0.82,0.82,0,0,0,.832.852,1.134,1.134,0,0,0,.787-0.3,5.11,5.11,0,0,0,.776-0.993q0.141-.219.215-0.34c0.046-.076.122-0.194,0.223-0.346a2.786,2.786,0,0,0,.918,1.726,2.582,2.582,0,0,0,2.376-.185c0.317-.181.212-0.565,0-0.494A0.807,0.807,0,0,1,14.176,15a5.159,5.159,0,0,1-.913-2.446l0,0Q13.487,12.24,13.663,12.027Z></path> </svg>";
+	module.exports = "<svg viewbox=\"0 0 18 18\"> <path class=ql-fill d=M5,8H3A1,1,0,0,1,3,6H5A1,1,0,0,1,5,8Z /> <path class=ql-fill d=M5,12H3a1,1,0,0,1,0-2H5A1,1,0,0,1,5,12Z /> <path class=ql-fill d=M13,16H3a1,1,0,0,1,0-2H13A1,1,0,0,1,13,16Z /> <path class=ql-fill d=M13,4H3A1,1,0,0,1,3,2H13A1,1,0,0,1,13,4Z /> <rect class=ql-fill x=8 y=6 width=8 height=6 rx=1 ry=1 transform=\"translate(24 18) rotate(-180)\"/> </svg>";
 
 /***/ }),
 /* 88 */
 /***/ (function(module, exports) {
 
-	module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=ql-stroke x1=3 x2=3 y1=4 y2=14></line> <line class=ql-stroke x1=11 x2=11 y1=4 y2=14></line> <line class=ql-stroke x1=11 x2=3 y1=9 y2=9></line> <line class=\"ql-stroke ql-thin\" x1=13.5 x2=15.5 y1=14.5 y2=14.5></line> <path class=ql-fill d=M14.5,15a0.5,0.5,0,0,1-.5-0.5V12.085l-0.276.138A0.5,0.5,0,0,1,13.053,12c-0.124-.247-0.023-0.324.224-0.447l1-.5A0.5,0.5,0,0,1,15,11.5v3A0.5,0.5,0,0,1,14.5,15Z></path> </svg>";
+	module.exports = "<svg viewbox=\"0 0 18 18\"> <path class=ql-fill d=M11.759,2.482a2.561,2.561,0,0,0-3.53.607A7.656,7.656,0,0,0,6.8,6.2C6.109,9.188,5.275,14.677,4.15,14.927a1.545,1.545,0,0,0-1.3-.933A0.922,0.922,0,0,0,2,15.036S1.954,16,4.119,16s3.091-2.691,3.7-5.553c0.177-.826.36-1.726,0.554-2.6L8.775,6.2c0.381-1.421.807-2.521,1.306-2.676a1.014,1.014,0,0,0,1.02.56A0.966,0.966,0,0,0,11.759,2.482Z></path> <rect class=ql-fill height=1.6 rx=0.8 ry=0.8 width=5 x=5.15 y=6.2></rect> <path class=ql-fill d=M13.663,12.027a1.662,1.662,0,0,1,.266-0.276q0.193,0.069.456,0.138a2.1,2.1,0,0,0,.535.069,1.075,1.075,0,0,0,.767-0.3,1.044,1.044,0,0,0,.314-0.8,0.84,0.84,0,0,0-.238-0.619,0.8,0.8,0,0,0-.594-0.239,1.154,1.154,0,0,0-.781.3,4.607,4.607,0,0,0-.781,1q-0.091.15-.218,0.346l-0.246.38c-0.068-.288-0.137-0.582-0.212-0.885-0.459-1.847-2.494-.984-2.941-0.8-0.482.2-.353,0.647-0.094,0.529a0.869,0.869,0,0,1,1.281.585c0.217,0.751.377,1.436,0.527,2.038a5.688,5.688,0,0,1-.362.467,2.69,2.69,0,0,1-.264.271q-0.221-.08-0.471-0.147a2.029,2.029,0,0,0-.522-0.066,1.079,1.079,0,0,0-.768.3A1.058,1.058,0,0,0,9,15.131a0.82,0.82,0,0,0,.832.852,1.134,1.134,0,0,0,.787-0.3,5.11,5.11,0,0,0,.776-0.993q0.141-.219.215-0.34c0.046-.076.122-0.194,0.223-0.346a2.786,2.786,0,0,0,.918,1.726,2.582,2.582,0,0,0,2.376-.185c0.317-.181.212-0.565,0-0.494A0.807,0.807,0,0,1,14.176,15a5.159,5.159,0,0,1-.913-2.446l0,0Q13.487,12.24,13.663,12.027Z></path> </svg>";
 
 /***/ }),
 /* 89 */
 /***/ (function(module, exports) {
 
-	module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=ql-stroke x1=3 x2=3 y1=4 y2=14></line> <line class=ql-stroke x1=11 x2=11 y1=4 y2=14></line> <line class=ql-stroke x1=11 x2=3 y1=9 y2=9></line> <path class=\"ql-stroke ql-thin\" d=M15.5,14.5h-2c0-.234,1.85-1.076,1.85-2.234a0.959,0.959,0,0,0-1.85-.109></path> </svg>";
+	module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=ql-stroke x1=3 x2=3 y1=4 y2=14></line> <line class=ql-stroke x1=11 x2=11 y1=4 y2=14></line> <line class=ql-stroke x1=11 x2=3 y1=9 y2=9></line> <line class=\"ql-stroke ql-thin\" x1=13.5 x2=15.5 y1=14.5 y2=14.5></line> <path class=ql-fill d=M14.5,15a0.5,0.5,0,0,1-.5-0.5V12.085l-0.276.138A0.5,0.5,0,0,1,13.053,12c-0.124-.247-0.023-0.324.224-0.447l1-.5A0.5,0.5,0,0,1,15,11.5v3A0.5,0.5,0,0,1,14.5,15Z></path> </svg>";
 
 /***/ }),
 /* 90 */
 /***/ (function(module, exports) {
 
-	module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=ql-stroke x1=7 x2=13 y1=4 y2=4></line> <line class=ql-stroke x1=5 x2=11 y1=14 y2=14></line> <line class=ql-stroke x1=8 x2=10 y1=14 y2=4></line> </svg>";
+	module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=ql-stroke x1=3 x2=3 y1=4 y2=14></line> <line class=ql-stroke x1=11 x2=11 y1=4 y2=14></line> <line class=ql-stroke x1=11 x2=3 y1=9 y2=9></line> <path class=\"ql-stroke ql-thin\" d=M15.5,14.5h-2c0-.234,1.85-1.076,1.85-2.234a0.959,0.959,0,0,0-1.85-.109></path> </svg>";
 
 /***/ }),
 /* 91 */
 /***/ (function(module, exports) {
 
-	module.exports = "<svg viewbox=\"0 0 18 18\"> <rect class=ql-stroke height=10 width=12 x=3 y=4></rect> <circle class=ql-fill cx=6 cy=7 r=1></circle> <polyline class=\"ql-even ql-fill\" points=\"5 12 5 11 7 9 8 10 11 7 13 9 13 12 5 12\"></polyline> </svg>";
+	module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=ql-stroke x1=7 x2=13 y1=4 y2=4></line> <line class=ql-stroke x1=5 x2=11 y1=14 y2=14></line> <line class=ql-stroke x1=8 x2=10 y1=14 y2=4></line> </svg>";
 
 /***/ }),
 /* 92 */
 /***/ (function(module, exports) {
 
-	module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=ql-stroke x1=3 x2=15 y1=14 y2=14></line> <line class=ql-stroke x1=3 x2=15 y1=4 y2=4></line> <line class=ql-stroke x1=9 x2=15 y1=9 y2=9></line> <polyline class=\"ql-fill ql-stroke\" points=\"3 7 3 11 5 9 3 7\"></polyline> </svg>";
+	module.exports = "<svg viewbox=\"0 0 18 18\"> <rect class=ql-stroke height=10 width=12 x=3 y=4></rect> <circle class=ql-fill cx=6 cy=7 r=1></circle> <polyline class=\"ql-even ql-fill\" points=\"5 12 5 11 7 9 8 10 11 7 13 9 13 12 5 12\"></polyline> </svg>";
 
 /***/ }),
 /* 93 */
 /***/ (function(module, exports) {
 
-	module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=ql-stroke x1=3 x2=15 y1=14 y2=14></line> <line class=ql-stroke x1=3 x2=15 y1=4 y2=4></line> <line class=ql-stroke x1=9 x2=15 y1=9 y2=9></line> <polyline class=ql-stroke points=\"5 7 5 11 3 9 5 7\"></polyline> </svg>";
+	module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=ql-stroke x1=3 x2=15 y1=14 y2=14></line> <line class=ql-stroke x1=3 x2=15 y1=4 y2=4></line> <line class=ql-stroke x1=9 x2=15 y1=9 y2=9></line> <polyline class=\"ql-fill ql-stroke\" points=\"3 7 3 11 5 9 3 7\"></polyline> </svg>";
 
 /***/ }),
 /* 94 */
 /***/ (function(module, exports) {
 
-	module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=ql-stroke x1=7 x2=11 y1=7 y2=11></line> <path class=\"ql-even ql-stroke\" d=M8.9,4.577a3.476,3.476,0,0,1,.36,4.679A3.476,3.476,0,0,1,4.577,8.9C3.185,7.5,2.035,6.4,4.217,4.217S7.5,3.185,8.9,4.577Z></path> <path class=\"ql-even ql-stroke\" d=M13.423,9.1a3.476,3.476,0,0,0-4.679-.36,3.476,3.476,0,0,0,.36,4.679c1.392,1.392,2.5,2.542,4.679.36S14.815,10.5,13.423,9.1Z></path> </svg>";
+	module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=ql-stroke x1=3 x2=15 y1=14 y2=14></line> <line class=ql-stroke x1=3 x2=15 y1=4 y2=4></line> <line class=ql-stroke x1=9 x2=15 y1=9 y2=9></line> <polyline class=ql-stroke points=\"5 7 5 11 3 9 5 7\"></polyline> </svg>";
 
 /***/ }),
 /* 95 */
 /***/ (function(module, exports) {
 
-	module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=ql-stroke x1=7 x2=15 y1=4 y2=4></line> <line class=ql-stroke x1=7 x2=15 y1=9 y2=9></line> <line class=ql-stroke x1=7 x2=15 y1=14 y2=14></line> <line class=\"ql-stroke ql-thin\" x1=2.5 x2=4.5 y1=5.5 y2=5.5></line> <path class=ql-fill d=M3.5,6A0.5,0.5,0,0,1,3,5.5V3.085l-0.276.138A0.5,0.5,0,0,1,2.053,3c-0.124-.247-0.023-0.324.224-0.447l1-.5A0.5,0.5,0,0,1,4,2.5v3A0.5,0.5,0,0,1,3.5,6Z></path> <path class=\"ql-stroke ql-thin\" d=M4.5,10.5h-2c0-.234,1.85-1.076,1.85-2.234A0.959,0.959,0,0,0,2.5,8.156></path> <path class=\"ql-stroke ql-thin\" d=M2.5,14.846a0.959,0.959,0,0,0,1.85-.109A0.7,0.7,0,0,0,3.75,14a0.688,0.688,0,0,0,.6-0.736,0.959,0.959,0,0,0-1.85-.109></path> </svg>";
+	module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=ql-stroke x1=7 x2=11 y1=7 y2=11></line> <path class=\"ql-even ql-stroke\" d=M8.9,4.577a3.476,3.476,0,0,1,.36,4.679A3.476,3.476,0,0,1,4.577,8.9C3.185,7.5,2.035,6.4,4.217,4.217S7.5,3.185,8.9,4.577Z></path> <path class=\"ql-even ql-stroke\" d=M13.423,9.1a3.476,3.476,0,0,0-4.679-.36,3.476,3.476,0,0,0,.36,4.679c1.392,1.392,2.5,2.542,4.679.36S14.815,10.5,13.423,9.1Z></path> </svg>";
 
 /***/ }),
 /* 96 */
 /***/ (function(module, exports) {
 
-	module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=ql-stroke x1=6 x2=15 y1=4 y2=4></line> <line class=ql-stroke x1=6 x2=15 y1=9 y2=9></line> <line class=ql-stroke x1=6 x2=15 y1=14 y2=14></line> <line class=ql-stroke x1=3 x2=3 y1=4 y2=4></line> <line class=ql-stroke x1=3 x2=3 y1=9 y2=9></line> <line class=ql-stroke x1=3 x2=3 y1=14 y2=14></line> </svg>";
+	module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=ql-stroke x1=7 x2=15 y1=4 y2=4></line> <line class=ql-stroke x1=7 x2=15 y1=9 y2=9></line> <line class=ql-stroke x1=7 x2=15 y1=14 y2=14></line> <line class=\"ql-stroke ql-thin\" x1=2.5 x2=4.5 y1=5.5 y2=5.5></line> <path class=ql-fill d=M3.5,6A0.5,0.5,0,0,1,3,5.5V3.085l-0.276.138A0.5,0.5,0,0,1,2.053,3c-0.124-.247-0.023-0.324.224-0.447l1-.5A0.5,0.5,0,0,1,4,2.5v3A0.5,0.5,0,0,1,3.5,6Z></path> <path class=\"ql-stroke ql-thin\" d=M4.5,10.5h-2c0-.234,1.85-1.076,1.85-2.234A0.959,0.959,0,0,0,2.5,8.156></path> <path class=\"ql-stroke ql-thin\" d=M2.5,14.846a0.959,0.959,0,0,0,1.85-.109A0.7,0.7,0,0,0,3.75,14a0.688,0.688,0,0,0,.6-0.736,0.959,0.959,0,0,0-1.85-.109></path> </svg>";
 
 /***/ }),
 /* 97 */
 /***/ (function(module, exports) {
 
-	module.exports = "<svg viewbox=\"0 0 18 18\"> <path class=ql-fill d=M15.5,15H13.861a3.858,3.858,0,0,0,1.914-2.975,1.8,1.8,0,0,0-1.6-1.751A1.921,1.921,0,0,0,12.021,11.7a0.50013,0.50013,0,1,0,.957.291h0a0.914,0.914,0,0,1,1.053-.725,0.81,0.81,0,0,1,.744.762c0,1.076-1.16971,1.86982-1.93971,2.43082A1.45639,1.45639,0,0,0,12,15.5a0.5,0.5,0,0,0,.5.5h3A0.5,0.5,0,0,0,15.5,15Z /> <path class=ql-fill d=M9.65,5.241a1,1,0,0,0-1.409.108L6,7.964,3.759,5.349A1,1,0,0,0,2.192,6.59178Q2.21541,6.6213,2.241,6.649L4.684,9.5,2.241,12.35A1,1,0,0,0,3.71,13.70722q0.02557-.02768.049-0.05722L6,11.036,8.241,13.65a1,1,0,1,0,1.567-1.24277Q9.78459,12.3777,9.759,12.35L7.316,9.5,9.759,6.651A1,1,0,0,0,9.65,5.241Z /> </svg>";
+	module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=ql-stroke x1=6 x2=15 y1=4 y2=4></line> <line class=ql-stroke x1=6 x2=15 y1=9 y2=9></line> <line class=ql-stroke x1=6 x2=15 y1=14 y2=14></line> <line class=ql-stroke x1=3 x2=3 y1=4 y2=4></line> <line class=ql-stroke x1=3 x2=3 y1=9 y2=9></line> <line class=ql-stroke x1=3 x2=3 y1=14 y2=14></line> </svg>";
 
 /***/ }),
 /* 98 */
 /***/ (function(module, exports) {
 
-	module.exports = "<svg viewbox=\"0 0 18 18\"> <path class=ql-fill d=M15.5,7H13.861a4.015,4.015,0,0,0,1.914-2.975,1.8,1.8,0,0,0-1.6-1.751A1.922,1.922,0,0,0,12.021,3.7a0.5,0.5,0,1,0,.957.291,0.917,0.917,0,0,1,1.053-.725,0.81,0.81,0,0,1,.744.762c0,1.077-1.164,1.925-1.934,2.486A1.423,1.423,0,0,0,12,7.5a0.5,0.5,0,0,0,.5.5h3A0.5,0.5,0,0,0,15.5,7Z /> <path class=ql-fill d=M9.651,5.241a1,1,0,0,0-1.41.108L6,7.964,3.759,5.349a1,1,0,1,0-1.519,1.3L4.683,9.5,2.241,12.35a1,1,0,1,0,1.519,1.3L6,11.036,8.241,13.65a1,1,0,0,0,1.519-1.3L7.317,9.5,9.759,6.651A1,1,0,0,0,9.651,5.241Z /> </svg>";
+	module.exports = "<svg viewbox=\"0 0 18 18\"> <path class=ql-fill d=M15.5,15H13.861a3.858,3.858,0,0,0,1.914-2.975,1.8,1.8,0,0,0-1.6-1.751A1.921,1.921,0,0,0,12.021,11.7a0.50013,0.50013,0,1,0,.957.291h0a0.914,0.914,0,0,1,1.053-.725,0.81,0.81,0,0,1,.744.762c0,1.076-1.16971,1.86982-1.93971,2.43082A1.45639,1.45639,0,0,0,12,15.5a0.5,0.5,0,0,0,.5.5h3A0.5,0.5,0,0,0,15.5,15Z /> <path class=ql-fill d=M9.65,5.241a1,1,0,0,0-1.409.108L6,7.964,3.759,5.349A1,1,0,0,0,2.192,6.59178Q2.21541,6.6213,2.241,6.649L4.684,9.5,2.241,12.35A1,1,0,0,0,3.71,13.70722q0.02557-.02768.049-0.05722L6,11.036,8.241,13.65a1,1,0,1,0,1.567-1.24277Q9.78459,12.3777,9.759,12.35L7.316,9.5,9.759,6.651A1,1,0,0,0,9.65,5.241Z /> </svg>";
 
 /***/ }),
 /* 99 */
 /***/ (function(module, exports) {
 
-	module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=\"ql-stroke ql-thin\" x1=15.5 x2=2.5 y1=8.5 y2=9.5></line> <path class=ql-fill d=M9.007,8C6.542,7.791,6,7.519,6,6.5,6,5.792,7.283,5,9,5c1.571,0,2.765.679,2.969,1.309a1,1,0,0,0,1.9-.617C13.356,4.106,11.354,3,9,3,6.2,3,4,4.538,4,6.5a3.2,3.2,0,0,0,.5,1.843Z></path> <path class=ql-fill d=M8.984,10C11.457,10.208,12,10.479,12,11.5c0,0.708-1.283,1.5-3,1.5-1.571,0-2.765-.679-2.969-1.309a1,1,0,1,0-1.9.617C4.644,13.894,6.646,15,9,15c2.8,0,5-1.538,5-3.5a3.2,3.2,0,0,0-.5-1.843Z></path> </svg>";
+	module.exports = "<svg viewbox=\"0 0 18 18\"> <path class=ql-fill d=M15.5,7H13.861a4.015,4.015,0,0,0,1.914-2.975,1.8,1.8,0,0,0-1.6-1.751A1.922,1.922,0,0,0,12.021,3.7a0.5,0.5,0,1,0,.957.291,0.917,0.917,0,0,1,1.053-.725,0.81,0.81,0,0,1,.744.762c0,1.077-1.164,1.925-1.934,2.486A1.423,1.423,0,0,0,12,7.5a0.5,0.5,0,0,0,.5.5h3A0.5,0.5,0,0,0,15.5,7Z /> <path class=ql-fill d=M9.651,5.241a1,1,0,0,0-1.41.108L6,7.964,3.759,5.349a1,1,0,1,0-1.519,1.3L4.683,9.5,2.241,12.35a1,1,0,1,0,1.519,1.3L6,11.036,8.241,13.65a1,1,0,0,0,1.519-1.3L7.317,9.5,9.759,6.651A1,1,0,0,0,9.651,5.241Z /> </svg>";
 
 /***/ }),
 /* 100 */
 /***/ (function(module, exports) {
 
-	module.exports = "<svg viewbox=\"0 0 18 18\"> <path class=ql-stroke d=M5,3V9a4.012,4.012,0,0,0,4,4H9a4.012,4.012,0,0,0,4-4V3></path> <rect class=ql-fill height=1 rx=0.5 ry=0.5 width=12 x=3 y=15></rect> </svg>";
+	module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=\"ql-stroke ql-thin\" x1=15.5 x2=2.5 y1=8.5 y2=9.5></line> <path class=ql-fill d=M9.007,8C6.542,7.791,6,7.519,6,6.5,6,5.792,7.283,5,9,5c1.571,0,2.765.679,2.969,1.309a1,1,0,0,0,1.9-.617C13.356,4.106,11.354,3,9,3,6.2,3,4,4.538,4,6.5a3.2,3.2,0,0,0,.5,1.843Z></path> <path class=ql-fill d=M8.984,10C11.457,10.208,12,10.479,12,11.5c0,0.708-1.283,1.5-3,1.5-1.571,0-2.765-.679-2.969-1.309a1,1,0,1,0-1.9.617C4.644,13.894,6.646,15,9,15c2.8,0,5-1.538,5-3.5a3.2,3.2,0,0,0-.5-1.843Z></path> </svg>";
 
 /***/ }),
 /* 101 */
 /***/ (function(module, exports) {
 
-	module.exports = "<svg viewbox=\"0 0 18 18\"> <rect class=ql-stroke height=12 width=12 x=3 y=3></rect> <rect class=ql-fill height=12 width=1 x=5 y=3></rect> <rect class=ql-fill height=12 width=1 x=12 y=3></rect> <rect class=ql-fill height=2 width=8 x=5 y=8></rect> <rect class=ql-fill height=1 width=3 x=3 y=5></rect> <rect class=ql-fill height=1 width=3 x=3 y=7></rect> <rect class=ql-fill height=1 width=3 x=3 y=10></rect> <rect class=ql-fill height=1 width=3 x=3 y=12></rect> <rect class=ql-fill height=1 width=3 x=12 y=5></rect> <rect class=ql-fill height=1 width=3 x=12 y=7></rect> <rect class=ql-fill height=1 width=3 x=12 y=10></rect> <rect class=ql-fill height=1 width=3 x=12 y=12></rect> </svg>";
+	module.exports = "<svg viewbox=\"0 0 18 18\"> <path class=ql-stroke d=M5,3V9a4.012,4.012,0,0,0,4,4H9a4.012,4.012,0,0,0,4-4V3></path> <rect class=ql-fill height=1 rx=0.5 ry=0.5 width=12 x=3 y=15></rect> </svg>";
 
 /***/ }),
 /* 102 */
+/***/ (function(module, exports) {
+
+	module.exports = "<svg viewbox=\"0 0 18 18\"> <rect class=ql-stroke height=12 width=12 x=3 y=3></rect> <rect class=ql-fill height=12 width=1 x=5 y=3></rect> <rect class=ql-fill height=12 width=1 x=12 y=3></rect> <rect class=ql-fill height=2 width=8 x=5 y=8></rect> <rect class=ql-fill height=1 width=3 x=3 y=5></rect> <rect class=ql-fill height=1 width=3 x=3 y=7></rect> <rect class=ql-fill height=1 width=3 x=3 y=10></rect> <rect class=ql-fill height=1 width=3 x=3 y=12></rect> <rect class=ql-fill height=1 width=3 x=12 y=5></rect> <rect class=ql-fill height=1 width=3 x=12 y=7></rect> <rect class=ql-fill height=1 width=3 x=12 y=10></rect> <rect class=ql-fill height=1 width=3 x=12 y=12></rect> </svg>";
+
+/***/ }),
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9378,7 +9847,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _dropdown = __webpack_require__(103);
+	var _dropdown = __webpack_require__(104);
 
 	var _dropdown2 = _interopRequireDefault(_dropdown);
 
@@ -9524,13 +9993,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = Picker;
 
 /***/ }),
-/* 103 */
+/* 104 */
 /***/ (function(module, exports) {
 
 	module.exports = "<svg viewbox=\"0 0 18 18\"> <polygon class=ql-stroke points=\"7 11 9 13 11 11 7 11\"></polygon> <polygon class=ql-stroke points=\"7 7 9 5 11 7 7 7\"></polygon> </svg>";
 
 /***/ }),
-/* 104 */
+/* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9543,7 +10012,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
-	var _picker = __webpack_require__(102);
+	var _picker = __webpack_require__(103);
 
 	var _picker2 = _interopRequireDefault(_picker);
 
@@ -9600,7 +10069,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = ColorPicker;
 
 /***/ }),
-/* 105 */
+/* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9613,7 +10082,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
-	var _picker = __webpack_require__(102);
+	var _picker = __webpack_require__(103);
 
 	var _picker2 = _interopRequireDefault(_picker);
 
@@ -9657,7 +10126,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = IconPicker;
 
 /***/ }),
-/* 106 */
+/* 107 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -9735,7 +10204,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = Tooltip;
 
 /***/ }),
-/* 107 */
+/* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9760,11 +10229,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _keyboard2 = _interopRequireDefault(_keyboard);
 
-	var _base = __webpack_require__(108);
+	var _base = __webpack_require__(109);
 
 	var _base2 = _interopRequireDefault(_base);
 
-	var _icons = __webpack_require__(70);
+	var _icons = __webpack_require__(71);
 
 	var _icons2 = _interopRequireDefault(_icons);
 
@@ -9809,7 +10278,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return BubbleTheme;
 	}(_base2.default);
 
-	BubbleTheme.DEFAULTS = (0, _extend2.default)(true, {}, _base.BaseTooltip.DEFAULTS, {
+	BubbleTheme.DEFAULTS = (0, _extend2.default)(true, {}, _base2.default.DEFAULTS, {
 	  modules: {
 	    toolbar: {
 	      handlers: {
@@ -9902,7 +10371,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = BubbleTheme;
 
 /***/ }),
-/* 108 */
+/* 109 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9920,9 +10389,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _extend2 = _interopRequireDefault(_extend);
 
-	var _delta = __webpack_require__(20);
+	var _quillDelta = __webpack_require__(20);
 
-	var _delta2 = _interopRequireDefault(_delta);
+	var _quillDelta2 = _interopRequireDefault(_quillDelta);
 
 	var _emitter = __webpack_require__(28);
 
@@ -9936,23 +10405,23 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _theme2 = _interopRequireDefault(_theme);
 
-	var _colorPicker = __webpack_require__(104);
+	var _colorPicker = __webpack_require__(105);
 
 	var _colorPicker2 = _interopRequireDefault(_colorPicker);
 
-	var _iconPicker = __webpack_require__(105);
+	var _iconPicker = __webpack_require__(106);
 
 	var _iconPicker2 = _interopRequireDefault(_iconPicker);
 
-	var _picker = __webpack_require__(102);
+	var _picker = __webpack_require__(103);
 
 	var _picker2 = _interopRequireDefault(_picker);
 
-	var _tooltip = __webpack_require__(106);
+	var _tooltip = __webpack_require__(107);
 
 	var _tooltip2 = _interopRequireDefault(_tooltip);
 
-	var _icons = __webpack_require__(70);
+	var _icons = __webpack_require__(71);
 
 	var _icons2 = _interopRequireDefault(_icons);
 
@@ -9966,7 +10435,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var ALIGNS = [false, 'center', 'right', 'justify'];
 
-	var COLORS = ["#000000", "#e60000", "#ff9900", "#ffff00", "#008A00", "#0066cc", "#9933ff", "#ffffff", "#facccc", "#ffebcc", "#ffffcc", "#cce8cc", "#cce0f5", "#ebd6ff", "#bbbbbb", "#f06666", "#ffc266", "#ffff66", "#66b966", "#66a3e0", "#c285ff", "#888888", "#a10000", "#b26b00", "#b2b200", "#006100", "#0047b2", "#6b24b2", "#444444", "#5c0000", "#663d00", "#666600", "#003700", "#002966", "#3d1466"];
+	var COLORS = ["#000000", "#e60000", "#ff9900", "#ffff00", "#008a00", "#0066cc", "#9933ff", "#ffffff", "#facccc", "#ffebcc", "#ffffcc", "#cce8cc", "#cce0f5", "#ebd6ff", "#bbbbbb", "#f06666", "#ffc266", "#ffff66", "#66b966", "#66a3e0", "#c285ff", "#888888", "#a10000", "#b26b00", "#b2b200", "#006100", "#0047b2", "#6b24b2", "#444444", "#5c0000", "#663d00", "#666600", "#003700", "#002966", "#3d1466"];
 
 	var FONTS = [false, 'serif', 'monospace'];
 
@@ -10095,7 +10564,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                var reader = new FileReader();
 	                reader.onload = function (e) {
 	                  var range = _this3.quill.getSelection(true);
-	                  _this3.quill.updateContents(new _delta2.default().retain(range.index).delete(range.length).insert({ image: e.target.result }), _emitter2.default.sources.USER);
+	                  _this3.quill.updateContents(new _quillDelta2.default().retain(range.index).delete(range.length).insert({ image: e.target.result }), _emitter2.default.sources.USER);
 	                  fileInput.value = "";
 	                };
 	                reader.readAsDataURL(fileInput.files[0]);
@@ -10234,7 +10703,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = BaseTheme;
 
 /***/ }),
-/* 109 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10257,7 +10726,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _emitter2 = _interopRequireDefault(_emitter);
 
-	var _base = __webpack_require__(108);
+	var _base = __webpack_require__(109);
 
 	var _base2 = _interopRequireDefault(_base);
 
@@ -10265,7 +10734,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _link2 = _interopRequireDefault(_link);
 
-	var _picker = __webpack_require__(102);
+	var _picker = __webpack_require__(103);
 
 	var _picker2 = _interopRequireDefault(_picker);
 
@@ -10410,7 +10879,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = SnowTheme;
 
 /***/ }),
-/* 110 */
+/* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10419,9 +10888,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
-	var _delta = __webpack_require__(20);
+	var _quillDelta = __webpack_require__(20);
 
-	var _delta2 = _interopRequireDefault(_delta);
+	var _quillDelta2 = _interopRequireDefault(_quillDelta);
 
 	var _editor = __webpack_require__(27);
 
@@ -10575,7 +11044,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ }),
-/* 111 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10702,7 +11171,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 
 /***/ }),
-/* 112 */
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10784,10 +11253,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    scroll.formatAt(5, 1, 'header', 2);
 	    expect(scroll.domNode).toEqualHTML('<h2>Hello</h2>');
 	  });
+
+	  it('remove unnecessary break', function () {
+	    var scroll = this.initialize(_scroll2.default, '<p>Test</p>');
+	    scroll.children.head.domNode.appendChild(document.createElement('br'));
+	    scroll.update();
+	    expect(scroll.domNode).toEqualHTML('<p>Test</p>');
+	  });
 	});
 
 /***/ }),
-/* 113 */
+/* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10879,7 +11355,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 
 /***/ }),
-/* 114 */
+/* 115 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10899,19 +11375,32 @@ return /******/ (function(modules) { // webpackBootstrap
 	    scroll.formatAt(2, 1, 'bold', true);
 	    expect(scroll.domNode).toEqualHTML('<p><strong><em>H</em></strong>e<strong><em>l</em></strong>lo World!</p>');
 	  });
+
+	  it('reorder', function () {
+	    var scroll = this.initialize(_scroll2.default, '<p>0<strong>12</strong>3</p>');
+	    var p = scroll.domNode.firstChild;
+	    var em = document.createElement('em');
+	    [].slice.call(p.childNodes).forEach(function (node) {
+	      em.appendChild(node);
+	    });
+	    p.appendChild(em);
+	    expect(scroll.domNode).toEqualHTML('<p><em>0<strong>12</strong>3</em></p>');
+	    scroll.update();
+	    expect(scroll.domNode).toEqualHTML('<p><em>0</em><strong><em>12</em></strong><em>3</em></p>');
+	  });
 	});
 
 /***/ }),
-/* 115 */
+/* 116 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
-	var _delta = __webpack_require__(20);
+	var _quillDelta = __webpack_require__(20);
 
-	var _delta2 = _interopRequireDefault(_delta);
+	var _quillDelta2 = _interopRequireDefault(_quillDelta);
 
 	var _editor = __webpack_require__(27);
 
@@ -10932,84 +11421,84 @@ return /******/ (function(modules) { // webpackBootstrap
 	    it('text', function () {
 	      var editor = this.initialize(_editor2.default, '<p><strong>0123</strong></p>');
 	      editor.insertText(2, '!!');
-	      expect(editor.getDelta()).toEqual(new _delta2.default().insert('01!!23', { bold: true }).insert('\n'));
+	      expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('01!!23', { bold: true }).insert('\n'));
 	      expect(this.container).toEqualHTML('<p><strong>01!!23</strong></p>');
 	    });
 
 	    it('embed', function () {
 	      var editor = this.initialize(_editor2.default, '<p><strong>0123</strong></p>');
 	      editor.insertEmbed(2, 'image', '/assets/favicon.png');
-	      expect(editor.getDelta()).toEqual(new _delta2.default().insert('01', { bold: true }).insert({ image: '/assets/favicon.png' }, { bold: true }).insert('23', { bold: true }).insert('\n'));
+	      expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('01', { bold: true }).insert({ image: '/assets/favicon.png' }, { bold: true }).insert('23', { bold: true }).insert('\n'));
 	      expect(this.container).toEqualHTML('<p><strong>01<img src="/assets/favicon.png">23</strong></p>');
 	    });
 
 	    it('on empty line', function () {
 	      var editor = this.initialize(_editor2.default, '<p>0</p><p><br></p><p>3</p>');
 	      editor.insertText(2, '!');
-	      expect(editor.getDelta()).toEqual(new _delta2.default().insert('0\n!\n3\n'));
+	      expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('0\n!\n3\n'));
 	      expect(this.container).toEqualHTML('<p>0</p><p>!</p><p>3</p>');
 	    });
 
 	    it('end of document', function () {
 	      var editor = this.initialize(_editor2.default, '<p>Hello</p>');
 	      editor.insertText(6, 'World!');
-	      expect(editor.getDelta()).toEqual(new _delta2.default().insert('Hello\nWorld!\n'));
+	      expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('Hello\nWorld!\n'));
 	      expect(this.container).toEqualHTML('<p>Hello</p><p>World!</p>');
 	    });
 
 	    it('end of document with newline', function () {
 	      var editor = this.initialize(_editor2.default, '<p>Hello</p>');
 	      editor.insertText(6, 'World!\n');
-	      expect(editor.getDelta()).toEqual(new _delta2.default().insert('Hello\nWorld!\n'));
+	      expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('Hello\nWorld!\n'));
 	      expect(this.container).toEqualHTML('<p>Hello</p><p>World!</p>');
 	    });
 
 	    it('embed at end of document with newline', function () {
 	      var editor = this.initialize(_editor2.default, '<p>Hello</p>');
 	      editor.insertEmbed(6, 'image', '/assets/favicon.png');
-	      expect(editor.getDelta()).toEqual(new _delta2.default().insert('Hello\n').insert({ image: '/assets/favicon.png' }).insert('\n'));
+	      expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('Hello\n').insert({ image: '/assets/favicon.png' }).insert('\n'));
 	      expect(this.container).toEqualHTML('<p>Hello</p><p><img src="/assets/favicon.png"></p>');
 	    });
 
 	    it('newline splitting', function () {
 	      var editor = this.initialize(_editor2.default, '<p><strong>0123</strong></p>');
 	      editor.insertText(2, '\n');
-	      expect(editor.getDelta()).toEqual(new _delta2.default().insert('01', { bold: true }).insert('\n').insert('23', { bold: true }).insert('\n'));
+	      expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('01', { bold: true }).insert('\n').insert('23', { bold: true }).insert('\n'));
 	      expect(this.container).toEqualHTML('\n        <p><strong>01</strong></p>\n        <p><strong>23</strong></p>');
 	    });
 
 	    it('prepend newline', function () {
 	      var editor = this.initialize(_editor2.default, '<p><strong>0123</strong></p>');
 	      editor.insertText(0, '\n');
-	      expect(editor.getDelta()).toEqual(new _delta2.default().insert('\n').insert('0123', { bold: true }).insert('\n'));
+	      expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('\n').insert('0123', { bold: true }).insert('\n'));
 	      expect(this.container).toEqualHTML('\n        <p><br></p>\n        <p><strong>0123</strong></p>');
 	    });
 
 	    it('append newline', function () {
 	      var editor = this.initialize(_editor2.default, '<p><strong>0123</strong></p>');
 	      editor.insertText(4, '\n');
-	      expect(editor.getDelta()).toEqual(new _delta2.default().insert('0123', { bold: true }).insert('\n\n'));
+	      expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('0123', { bold: true }).insert('\n\n'));
 	      expect(this.container).toEqualHTML('\n        <p><strong>0123</strong></p>\n        <p><br></p>');
 	    });
 
 	    it('multiline text', function () {
 	      var editor = this.initialize(_editor2.default, '<p><strong>0123</strong></p>');
 	      editor.insertText(2, '\n!!\n!!\n');
-	      expect(editor.getDelta()).toEqual(new _delta2.default().insert('01', { bold: true }).insert('\n').insert('!!', { bold: true }).insert('\n').insert('!!', { bold: true }).insert('\n').insert('23', { bold: true }).insert('\n'));
+	      expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('01', { bold: true }).insert('\n').insert('!!', { bold: true }).insert('\n').insert('!!', { bold: true }).insert('\n').insert('23', { bold: true }).insert('\n'));
 	      expect(this.container).toEqualHTML('\n        <p><strong>01</strong></p>\n        <p><strong>!!</strong></p>\n        <p><strong>!!</strong></p>\n        <p><strong>23</strong></p>');
 	    });
 
 	    it('multiple newlines', function () {
 	      var editor = this.initialize(_editor2.default, '<p><strong>0123</strong></p>');
 	      editor.insertText(2, '\n\n');
-	      expect(editor.getDelta()).toEqual(new _delta2.default().insert('01', { bold: true }).insert('\n\n').insert('23', { bold: true }).insert('\n'));
+	      expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('01', { bold: true }).insert('\n\n').insert('23', { bold: true }).insert('\n'));
 	      expect(this.container).toEqualHTML('\n        <p><strong>01</strong></p>\n        <p><br></p>\n        <p><strong>23</strong></p>');
 	    });
 
 	    it('text removing formatting', function () {
 	      var editor = this.initialize(_editor2.default, '<p><s>01</s></p>');
 	      editor.insertText(2, '23', { bold: false, strike: false });
-	      expect(editor.getDelta()).toEqual(new _delta2.default().insert('01', { strike: true }).insert('23\n'));
+	      expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('01', { strike: true }).insert('23\n'));
 	    });
 	  });
 
@@ -11017,42 +11506,42 @@ return /******/ (function(modules) { // webpackBootstrap
 	    it('inner node', function () {
 	      var editor = this.initialize(_editor2.default, '<p><strong><em>0123</em></strong></p>');
 	      editor.deleteText(1, 2);
-	      expect(editor.getDelta()).toEqual(new _delta2.default().insert('03', { bold: true, italic: true }).insert('\n'));
+	      expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('03', { bold: true, italic: true }).insert('\n'));
 	      expect(this.container).toEqualHTML('<p><strong><em>03</em></strong></p>');
 	    });
 
 	    it('parts of multiple lines', function () {
 	      var editor = this.initialize(_editor2.default, '<p><em>0123</em></p><p><em>5678</em></p>');
 	      editor.deleteText(2, 5);
-	      expect(editor.getDelta()).toEqual(new _delta2.default().insert('0178', { italic: true }).insert('\n'));
+	      expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('0178', { italic: true }).insert('\n'));
 	      expect(this.container).toEqualHTML('<p><em>0178</em></p>');
 	    });
 
 	    it('entire line keeping newline', function () {
 	      var editor = this.initialize(_editor2.default, '<p><strong><em>0123</em></strong></p>');
 	      editor.deleteText(0, 4);
-	      expect(editor.getDelta()).toEqual(new _delta2.default().insert('\n'));
+	      expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('\n'));
 	      expect(this.container).toEqualHTML('<p><br></p>');
 	    });
 
 	    it('newline', function () {
 	      var editor = this.initialize(_editor2.default, '<p><em>0123</em></p><p><em>5678</em></p>');
 	      editor.deleteText(4, 1);
-	      expect(editor.getDelta()).toEqual(new _delta2.default().insert('01235678', { italic: true }).insert('\n'));
+	      expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('01235678', { italic: true }).insert('\n'));
 	      expect(this.container).toEqualHTML('<p><em>01235678</em></p>');
 	    });
 
 	    it('entire document', function () {
 	      var editor = this.initialize(_editor2.default, '<p><strong><em>0123</em></strong></p>');
 	      editor.deleteText(0, 5);
-	      expect(editor.getDelta()).toEqual(new _delta2.default().insert('\n'));
+	      expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('\n'));
 	      expect(this.container).toEqualHTML('<p><br></p>');
 	    });
 
 	    it('multiple complete lines', function () {
 	      var editor = this.initialize(_editor2.default, '<p><em>012</em></p><p><em>456</em></p><p><em>890</em></p>');
 	      editor.deleteText(0, 8);
-	      expect(editor.getDelta()).toEqual(new _delta2.default().insert('890', { italic: true }).insert('\n'));
+	      expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('890', { italic: true }).insert('\n'));
 	      expect(this.container).toEqualHTML('<p><em>890</em></p>');
 	    });
 	  });
@@ -11106,122 +11595,122 @@ return /******/ (function(modules) { // webpackBootstrap
 	  describe('applyDelta', function () {
 	    it('insert', function () {
 	      var editor = this.initialize(_editor2.default, '<p></p>');
-	      editor.applyDelta(new _delta2.default().insert('01'));
+	      editor.applyDelta(new _quillDelta2.default().insert('01'));
 	      expect(this.container).toEqualHTML('<p>01</p>');
 	    });
 
 	    it('attributed insert', function () {
 	      var editor = this.initialize(_editor2.default, '<p>0123</p>');
-	      editor.applyDelta(new _delta2.default().retain(2).insert('|', { bold: true }));
+	      editor.applyDelta(new _quillDelta2.default().retain(2).insert('|', { bold: true }));
 	      expect(this.container).toEqualHTML('<p>01<strong>|</strong>23</p>');
 	    });
 
 	    it('format', function () {
 	      var editor = this.initialize(_editor2.default, '<p>01</p>');
-	      editor.applyDelta(new _delta2.default().retain(2, { bold: true }));
+	      editor.applyDelta(new _quillDelta2.default().retain(2, { bold: true }));
 	      expect(this.container).toEqualHTML('<p><strong>01</strong></p>');
 	    });
 
 	    it('discontinuous formats', function () {
 	      var editor = this.initialize(_editor2.default, '');
-	      var delta = new _delta2.default().insert('ab', { bold: true }).insert('23\n45').insert('cd', { bold: true });
+	      var delta = new _quillDelta2.default().insert('ab', { bold: true }).insert('23\n45').insert('cd', { bold: true });
 	      editor.applyDelta(delta);
 	      expect(this.container).toEqualHTML('<p><strong>ab</strong>23</p><p>45<strong>cd</strong></p>');
 	    });
 
 	    it('unformatted insert', function () {
 	      var editor = this.initialize(_editor2.default, '<p><em>01</em></p>');
-	      editor.applyDelta(new _delta2.default().retain(1).insert('|'));
+	      editor.applyDelta(new _quillDelta2.default().retain(1).insert('|'));
 	      expect(this.container).toEqualHTML('<p><em>0</em>|<em>1</em></p>');
 	    });
 
 	    it('insert at format boundary', function () {
 	      var editor = this.initialize(_editor2.default, '<p><em>0</em><u>1</u></p>');
-	      editor.applyDelta(new _delta2.default().retain(1).insert('|', { strike: true }));
+	      editor.applyDelta(new _quillDelta2.default().retain(1).insert('|', { strike: true }));
 	      expect(this.container).toEqualHTML('<p><em>0</em><s>|</s><u>1</u></p>');
 	    });
 
 	    it('unformatted newline', function () {
 	      var editor = this.initialize(_editor2.default, '<h1>01</h1>');
-	      editor.applyDelta(new _delta2.default().retain(2).insert('\n'));
+	      editor.applyDelta(new _quillDelta2.default().retain(2).insert('\n'));
 	      expect(this.container).toEqualHTML('<p>01</p><h1><br></h1>');
 	    });
 
 	    it('formatted embed', function () {
 	      var editor = this.initialize(_editor2.default, '');
-	      editor.applyDelta(new _delta2.default().insert({ image: '/assets/favicon.png' }, { italic: true }));
+	      editor.applyDelta(new _quillDelta2.default().insert({ image: '/assets/favicon.png' }, { italic: true }));
 	      expect(this.container).toEqualHTML('<p><em><img src="/assets/favicon.png"></em>');
 	    });
 
 	    it('old embed', function () {
 	      var editor = this.initialize(_editor2.default, '');
-	      editor.applyDelta(new _delta2.default().insert(1, { image: '/assets/favicon.png', italic: true }));
+	      editor.applyDelta(new _quillDelta2.default().insert(1, { image: '/assets/favicon.png', italic: true }));
 	      expect(this.container).toEqualHTML('<p><em><img src="/assets/favicon.png"></em>');
 	    });
 
 	    it('old list', function () {
 	      var editor = this.initialize(_editor2.default, '');
-	      editor.applyDelta(new _delta2.default().insert('\n', { bullet: true }).insert('\n', { list: true }));
+	      editor.applyDelta(new _quillDelta2.default().insert('\n', { bullet: true }).insert('\n', { list: true }));
 	      expect(this.container).toEqualHTML('<ul><li><br></li></ul><ol><li><br></li></ol><p><br></p>');
 	    });
 
 	    it('improper block embed insert', function () {
 	      var editor = this.initialize(_editor2.default, '<p>0123</p>');
-	      editor.applyDelta(new _delta2.default().retain(2).insert({ video: '#' }));
+	      editor.applyDelta(new _quillDelta2.default().retain(2).insert({ video: '#' }));
 	      expect(this.container).toEqualHTML('<p>01</p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe><p>23</p>');
 	    });
 
 	    it('append formatted block embed', function () {
 	      var editor = this.initialize(_editor2.default, '<p>0123</p><p><br></p>');
-	      editor.applyDelta(new _delta2.default().retain(5).insert({ video: '#' }, { align: 'right' }));
+	      editor.applyDelta(new _quillDelta2.default().retain(5).insert({ video: '#' }, { align: 'right' }));
 	      expect(this.container).toEqualHTML('<p>0123</p><iframe src="#" class="ql-video ql-align-right" frameborder="0" allowfullscreen="true"></iframe><p><br></p>');
 	    });
 
 	    it('append', function () {
 	      var editor = this.initialize(_editor2.default, '<p>0123</p>');
-	      editor.applyDelta(new _delta2.default().retain(5).insert('5678'));
+	      editor.applyDelta(new _quillDelta2.default().retain(5).insert('5678'));
 	      expect(this.container).toEqualHTML('<p>0123</p><p>5678</p>');
 	    });
 
 	    it('append newline', function () {
 	      var editor = this.initialize(_editor2.default, '<p>0123</p>');
-	      editor.applyDelta(new _delta2.default().retain(5).insert('\n', { header: 2 }));
+	      editor.applyDelta(new _quillDelta2.default().retain(5).insert('\n', { header: 2 }));
 	      expect(this.container).toEqualHTML('<p>0123</p><h2><br></h2>');
 	    });
 
 	    it('append text with newline', function () {
 	      var editor = this.initialize(_editor2.default, '<p>0123</p>');
-	      editor.applyDelta(new _delta2.default().retain(5).insert('5678').insert('\n', { header: 2 }));
+	      editor.applyDelta(new _quillDelta2.default().retain(5).insert('5678').insert('\n', { header: 2 }));
 	      expect(this.container).toEqualHTML('<p>0123</p><h2>5678</h2>');
 	    });
 
 	    it('append non-isolated newline', function () {
 	      var editor = this.initialize(_editor2.default, '<p>0123</p>');
-	      editor.applyDelta(new _delta2.default().retain(5).insert('5678\n', { header: 2 }));
+	      editor.applyDelta(new _quillDelta2.default().retain(5).insert('5678\n', { header: 2 }));
 	      expect(this.container).toEqualHTML('<p>0123</p><h2>5678</h2>');
 	    });
 
 	    it('eventual append', function () {
 	      var editor = this.initialize(_editor2.default, '<p>0123</p>');
-	      editor.applyDelta(new _delta2.default().retain(2).insert('ab\n', { header: 1 }).retain(3).insert('cd\n', { header: 2 }));
+	      editor.applyDelta(new _quillDelta2.default().retain(2).insert('ab\n', { header: 1 }).retain(3).insert('cd\n', { header: 2 }));
 	      expect(this.container).toEqualHTML('<h1>01ab</h1><p>23</p><h2>cd</h2>');
 	    });
 
 	    it('append text, embed and newline', function () {
 	      var editor = this.initialize(_editor2.default, '<p>0123</p>');
-	      editor.applyDelta(new _delta2.default().retain(5).insert('5678').insert({ image: '/assets/favicon.png' }).insert('\n', { header: 2 }));
+	      editor.applyDelta(new _quillDelta2.default().retain(5).insert('5678').insert({ image: '/assets/favicon.png' }).insert('\n', { header: 2 }));
 	      expect(this.container).toEqualHTML('<p>0123</p><h2>5678<img src="/assets/favicon.png"></h2>');
 	    });
 
 	    it('append multiple lines', function () {
 	      var editor = this.initialize(_editor2.default, '<p>0123</p>');
-	      editor.applyDelta(new _delta2.default().retain(5).insert('56').insert('\n', { header: 1 }).insert('89').insert('\n', { header: 2 }));
+	      editor.applyDelta(new _quillDelta2.default().retain(5).insert('56').insert('\n', { header: 1 }).insert('89').insert('\n', { header: 2 }));
 	      expect(this.container).toEqualHTML('<p>0123</p><h1>56</h1><h2>89</h2>');
 	    });
 
 	    it('code', function () {
 	      var editor = this.initialize(_editor2.default, { html: '<p>0</p><pre>1\n23\n</pre><p><br></p>' });
-	      editor.applyDelta(new _delta2.default().delete(4).retain(1).delete(2));
+	      editor.applyDelta(new _quillDelta2.default().delete(4).retain(1).delete(2));
 	      expect(editor.scroll.domNode.innerHTML).toEqual('<p>2</p>');
 	    });
 	  });
@@ -11275,7 +11764,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    it('api text insert', function () {
 	      var old = this.editor.getDelta();
 	      this.editor.insertText(2, '!');
-	      var delta = new _delta2.default().retain(2).insert('!');
+	      var delta = new _quillDelta2.default().retain(2).insert('!');
 	      expect(this.editor.emitter.emit).toHaveBeenCalledWith(_emitter2.default.events.TEXT_CHANGE, delta, old, _emitter2.default.sources.API);
 	    });
 
@@ -11284,7 +11773,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      var old = this.editor.getDelta();
 	      this.container.firstChild.firstChild.data = '01!23';
-	      var delta = new _delta2.default().retain(2).insert('!');
+	      var delta = new _quillDelta2.default().retain(2).insert('!');
 	      setTimeout(function () {
 	        expect(_this.editor.emitter.emit).toHaveBeenCalledWith(_emitter2.default.events.TEXT_CHANGE, delta, old, _emitter2.default.sources.USER);
 	        done();
@@ -11294,16 +11783,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 
 /***/ }),
-/* 116 */
+/* 117 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
-	var _delta = __webpack_require__(20);
+	var _quillDelta = __webpack_require__(20);
 
-	var _delta2 = _interopRequireDefault(_delta);
+	var _quillDelta2 = _interopRequireDefault(_quillDelta);
 
 	var _selection = __webpack_require__(40);
 
@@ -11465,24 +11954,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	      expect(range.length).toEqual(4);
 	    });
 
-	    it('no focus', function () {
-	      var selection = this.initialize(_selection2.default, '');
-
-	      var _selection$getRange19 = selection.getRange(),
-	          _selection$getRange20 = _slicedToArray(_selection$getRange19, 1),
-	          range = _selection$getRange20[0];
-
-	      expect(range).toEqual(null);
-	    });
-
 	    it('wrong input', function () {
 	      var container = this.initialize(HTMLElement, '\n        <textarea>Test</textarea>\n        <div></div>');
 	      var selection = this.initialize(_selection2.default, '<p>0123</p>', container.lastChild);
 	      container.firstChild.select();
 
-	      var _selection$getRange21 = selection.getRange(),
-	          _selection$getRange22 = _slicedToArray(_selection$getRange21, 1),
-	          range = _selection$getRange22[0];
+	      var _selection$getRange19 = selection.getRange(),
+	          _selection$getRange20 = _slicedToArray(_selection$getRange19, 1),
+	          range = _selection$getRange20[0];
 
 	      expect(range).toEqual(null);
 	    });
@@ -11494,9 +11973,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var expected = new _selection.Range(0);
 	      selection.setRange(expected);
 
-	      var _selection$getRange23 = selection.getRange(),
-	          _selection$getRange24 = _slicedToArray(_selection$getRange23, 1),
-	          range = _selection$getRange24[0];
+	      var _selection$getRange21 = selection.getRange(),
+	          _selection$getRange22 = _slicedToArray(_selection$getRange21, 1),
+	          range = _selection$getRange22[0];
 
 	      expect(range).toEqual(expected);
 	      expect(selection.hasFocus()).toBe(true);
@@ -11507,9 +11986,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var expected = new _selection.Range(0, 1);
 	      selection.setRange(expected);
 
-	      var _selection$getRange25 = selection.getRange(),
-	          _selection$getRange26 = _slicedToArray(_selection$getRange25, 1),
-	          range = _selection$getRange26[0];
+	      var _selection$getRange23 = selection.getRange(),
+	          _selection$getRange24 = _slicedToArray(_selection$getRange23, 1),
+	          range = _selection$getRange24[0];
 
 	      expect(range).toEqual(range);
 	      expect(selection.hasFocus()).toBe(true);
@@ -11520,9 +11999,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var expected = new _selection.Range(1, 3);
 	      selection.setRange(expected);
 
-	      var _selection$getRange27 = selection.getRange(),
-	          _selection$getRange28 = _slicedToArray(_selection$getRange27, 1),
-	          range = _selection$getRange28[0];
+	      var _selection$getRange25 = selection.getRange(),
+	          _selection$getRange26 = _slicedToArray(_selection$getRange25, 1),
+	          range = _selection$getRange26[0];
 
 	      expect(range).toEqual(expected);
 	      expect(selection.hasFocus()).toBe(true);
@@ -11533,9 +12012,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var expected = new _selection.Range(2, 2);
 	      selection.setRange(expected);
 
-	      var _selection$getRange29 = selection.getRange(),
-	          _selection$getRange30 = _slicedToArray(_selection$getRange29, 1),
-	          range = _selection$getRange30[0];
+	      var _selection$getRange27 = selection.getRange(),
+	          _selection$getRange28 = _slicedToArray(_selection$getRange27, 1),
+	          range = _selection$getRange28[0];
 
 	      expect(range).toEqual(expected);
 	      expect(selection.hasFocus()).toBe(true);
@@ -11546,9 +12025,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var expected = new _selection.Range(1, 0);
 	      selection.setRange(expected);
 
-	      var _selection$getRange31 = selection.getRange(),
-	          _selection$getRange32 = _slicedToArray(_selection$getRange31, 1),
-	          range = _selection$getRange32[0];
+	      var _selection$getRange29 = selection.getRange(),
+	          _selection$getRange30 = _slicedToArray(_selection$getRange29, 1),
+	          range = _selection$getRange30[0];
 
 	      expect(range).toEqual(expected);
 	      expect(selection.hasFocus()).toBe(true);
@@ -11559,9 +12038,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var expected = new _selection.Range(1, 3);
 	      selection.setRange(expected);
 
-	      var _selection$getRange33 = selection.getRange(),
-	          _selection$getRange34 = _slicedToArray(_selection$getRange33, 1),
-	          range = _selection$getRange34[0];
+	      var _selection$getRange31 = selection.getRange(),
+	          _selection$getRange32 = _slicedToArray(_selection$getRange31, 1),
+	          range = _selection$getRange32[0];
 
 	      expect(range).toEqual(expected);
 	      expect(selection.hasFocus()).toBe(true);
@@ -11571,18 +12050,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var selection = this.initialize(_selection2.default, '<p>0123</p>');
 	      selection.setRange(new _selection.Range(1));
 
-	      var _selection$getRange35 = selection.getRange(),
-	          _selection$getRange36 = _slicedToArray(_selection$getRange35, 1),
-	          range = _selection$getRange36[0];
+	      var _selection$getRange33 = selection.getRange(),
+	          _selection$getRange34 = _slicedToArray(_selection$getRange33, 1),
+	          range = _selection$getRange34[0];
 
 	      expect(range).not.toEqual(null);
 	      selection.setRange(null);
 
-	      var _selection$getRange37 = selection.getRange();
+	      var _selection$getRange35 = selection.getRange();
 
-	      var _selection$getRange38 = _slicedToArray(_selection$getRange37, 1);
+	      var _selection$getRange36 = _slicedToArray(_selection$getRange35, 1);
 
-	      range = _selection$getRange38[0];
+	      range = _selection$getRange36[0];
 
 	      expect(range).toEqual(null);
 	      expect(selection.hasFocus()).toBe(false);
@@ -11801,16 +12280,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 
 /***/ }),
-/* 117 */
+/* 118 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
-	var _delta = __webpack_require__(20);
+	var _quillDelta = __webpack_require__(20);
 
-	var _delta2 = _interopRequireDefault(_delta);
+	var _quillDelta2 = _interopRequireDefault(_quillDelta);
 
 	var _quill = __webpack_require__(18);
 
@@ -11828,7 +12307,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _toolbar2 = _interopRequireDefault(_toolbar);
 
-	var _snow = __webpack_require__(109);
+	var _snow = __webpack_require__(110);
 
 	var _snow2 = _interopRequireDefault(_snow);
 
@@ -11846,25 +12325,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	  describe('construction', function () {
 	    it('empty', function () {
 	      var quill = this.initialize(_quill2.default, '');
-	      expect(quill.getContents()).toEqual(new _delta2.default().insert('\n'));
+	      expect(quill.getContents()).toEqual(new _quillDelta2.default().insert('\n'));
 	      expect(quill.root).toEqualHTML('<p><br></p>');
 	    });
 
 	    it('text', function () {
 	      var quill = this.initialize(_quill2.default, '0123');
-	      expect(quill.getContents()).toEqual(new _delta2.default().insert('0123\n'));
+	      expect(quill.getContents()).toEqual(new _quillDelta2.default().insert('0123\n'));
 	      expect(quill.root).toEqualHTML('<p>0123</p>');
 	    });
 
 	    it('newlines', function () {
 	      var quill = this.initialize(_quill2.default, '<p><br></p><p><br></p><p><br></p>');
-	      expect(quill.getContents()).toEqual(new _delta2.default().insert('\n\n\n'));
+	      expect(quill.getContents()).toEqual(new _quillDelta2.default().insert('\n\n\n'));
 	      expect(quill.root).toEqualHTML('<p><br></p><p><br></p><p><br></p>');
 	    });
 
 	    it('formatted ending', function () {
 	      var quill = this.initialize(_quill2.default, '<p class="ql-align-center">Test</p>');
-	      expect(quill.getContents()).toEqual(new _delta2.default().insert('Test').insert('\n', { align: 'center' }));
+	      expect(quill.getContents()).toEqual(new _quillDelta2.default().insert('Test').insert('\n', { align: 'center' }));
 	      expect(quill.root).toEqualHTML('<p class="ql-align-center">Test</p>');
 	    });
 	  });
@@ -11878,7 +12357,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    it('deleteText()', function () {
 	      this.quill.deleteText(3, 2);
-	      var change = new _delta2.default().retain(3).delete(2);
+	      var change = new _quillDelta2.default().retain(3).delete(2);
 	      expect(this.quill.root).toEqualHTML('<p>012<em>5</em>67</p>');
 	      expect(this.quill.emitter.emit).toHaveBeenCalledWith(_emitter2.default.events.TEXT_CHANGE, change, this.oldDelta, _emitter2.default.sources.API);
 	    });
@@ -11886,7 +12365,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    it('format', function () {
 	      this.quill.setSelection(3, 2);
 	      this.quill.format('bold', true);
-	      var change = new _delta2.default().retain(3).retain(2, { bold: true });
+	      var change = new _quillDelta2.default().retain(3).retain(2, { bold: true });
 	      expect(this.quill.root).toEqualHTML('<p>012<strong>3<em>4</em></strong><em>5</em>67</p>');
 	      expect(this.quill.emitter.emit).toHaveBeenCalledWith(_emitter2.default.events.TEXT_CHANGE, change, this.oldDelta, _emitter2.default.sources.API);
 	      expect(this.quill.getSelection()).toEqual(new _selection.Range(3, 2));
@@ -11894,28 +12373,28 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    it('formatLine()', function () {
 	      this.quill.formatLine(1, 1, 'header', 2);
-	      var change = new _delta2.default().retain(8).retain(1, { header: 2 });
+	      var change = new _quillDelta2.default().retain(8).retain(1, { header: 2 });
 	      expect(this.quill.root).toEqualHTML('<h2>0123<em>45</em>67</h2>');
 	      expect(this.quill.emitter.emit).toHaveBeenCalledWith(_emitter2.default.events.TEXT_CHANGE, change, this.oldDelta, _emitter2.default.sources.API);
 	    });
 
 	    it('formatText()', function () {
 	      this.quill.formatText(3, 2, 'bold', true);
-	      var change = new _delta2.default().retain(3).retain(2, { bold: true });
+	      var change = new _quillDelta2.default().retain(3).retain(2, { bold: true });
 	      expect(this.quill.root).toEqualHTML('<p>012<strong>3<em>4</em></strong><em>5</em>67</p>');
 	      expect(this.quill.emitter.emit).toHaveBeenCalledWith(_emitter2.default.events.TEXT_CHANGE, change, this.oldDelta, _emitter2.default.sources.API);
 	    });
 
 	    it('insertEmbed()', function () {
 	      this.quill.insertEmbed(5, 'image', '/assets/favicon.png');
-	      var change = new _delta2.default().retain(5).insert({ image: '/assets/favicon.png' }, { italic: true });
+	      var change = new _quillDelta2.default().retain(5).insert({ image: '/assets/favicon.png' }, { italic: true });
 	      expect(this.quill.root).toEqualHTML('<p>0123<em>4<img src="/assets/favicon.png">5</em>67</p>');
 	      expect(this.quill.emitter.emit).toHaveBeenCalledWith(_emitter2.default.events.TEXT_CHANGE, change, this.oldDelta, _emitter2.default.sources.API);
 	    });
 
 	    it('insertText()', function () {
 	      this.quill.insertText(5, '|', 'bold', true);
-	      var change = new _delta2.default().retain(5).insert('|', { bold: true, italic: true });
+	      var change = new _quillDelta2.default().retain(5).insert('|', { bold: true, italic: true });
 	      expect(this.quill.root).toEqualHTML('<p>0123<em>4</em><strong><em>|</em></strong><em>5</em>67</p>');
 	      expect(this.quill.emitter.emit).toHaveBeenCalledWith(_emitter2.default.events.TEXT_CHANGE, change, this.oldDelta, _emitter2.default.sources.API);
 	    });
@@ -11961,20 +12440,20 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    it('removeFormat()', function () {
 	      this.quill.removeFormat(5, 1);
-	      var change = new _delta2.default().retain(5).retain(1, { italic: null });
+	      var change = new _quillDelta2.default().retain(5).retain(1, { italic: null });
 	      expect(this.quill.root).toEqualHTML('<p>0123<em>4</em>567</p>');
 	      expect(this.quill.emitter.emit).toHaveBeenCalledWith(_emitter2.default.events.TEXT_CHANGE, change, this.oldDelta, _emitter2.default.sources.API);
 	    });
 
 	    it('updateContents() delta', function () {
-	      var delta = new _delta2.default().retain(5).insert('|');
+	      var delta = new _quillDelta2.default().retain(5).insert('|');
 	      this.quill.updateContents(delta);
 	      expect(this.quill.root).toEqualHTML('<p>0123<em>4</em>|<em>5</em>67</p>');
 	      expect(this.quill.emitter.emit).toHaveBeenCalledWith(_emitter2.default.events.TEXT_CHANGE, delta, this.oldDelta, _emitter2.default.sources.API);
 	    });
 
 	    it('updateContents() ops array', function () {
-	      var delta = new _delta2.default().retain(5).insert('|');
+	      var delta = new _quillDelta2.default().retain(5).insert('|');
 	      this.quill.updateContents(delta.ops);
 	      expect(this.quill.root).toEqualHTML('<p>0123<em>4</em>|<em>5</em>67</p>');
 	      expect(this.quill.emitter.emit).toHaveBeenCalledWith(_emitter2.default.events.TEXT_CHANGE, delta, this.oldDelta, _emitter2.default.sources.API);
@@ -11984,7 +12463,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  describe('setContents()', function () {
 	    it('empty', function () {
 	      var quill = this.initialize(_quill2.default, '');
-	      var delta = new _delta2.default().insert('\n');
+	      var delta = new _quillDelta2.default().insert('\n');
 	      quill.setContents(delta);
 	      expect(quill.getContents()).toEqual(delta);
 	      expect(quill.root).toEqualHTML('<p><br></p>');
@@ -11992,7 +12471,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    it('single line', function () {
 	      var quill = this.initialize(_quill2.default, '');
-	      var delta = new _delta2.default().insert('Hello World!\n');
+	      var delta = new _quillDelta2.default().insert('Hello World!\n');
 	      quill.setContents(delta);
 	      expect(quill.getContents()).toEqual(delta);
 	      expect(quill.root).toEqualHTML('<p>Hello World!</p>');
@@ -12000,7 +12479,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    it('multiple lines', function () {
 	      var quill = this.initialize(_quill2.default, '');
-	      var delta = new _delta2.default().insert('Hello\n\nWorld!\n');
+	      var delta = new _quillDelta2.default().insert('Hello\n\nWorld!\n');
 	      quill.setContents(delta);
 	      expect(quill.getContents()).toEqual(delta);
 	      expect(quill.root).toEqualHTML('<p>Hello</p><p><br></p><p>World!</p>');
@@ -12008,7 +12487,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    it('basic formats', function () {
 	      var quill = this.initialize(_quill2.default, '');
-	      var delta = new _delta2.default().insert('Welcome').insert('\n', { header: 1 }).insert('Hello\n').insert('World').insert('!', { bold: true }).insert('\n');
+	      var delta = new _quillDelta2.default().insert('Welcome').insert('\n', { header: 1 }).insert('Hello\n').insert('World').insert('!', { bold: true }).insert('\n');
 	      quill.setContents(delta);
 	      expect(quill.getContents()).toEqual(delta);
 	      expect(quill.root).toEqualHTML('\n        <h1>Welcome</h1>\n        <p>Hello</p>\n        <p>World<strong>!</strong></p>\n      ');
@@ -12016,7 +12495,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    it('array of operations', function () {
 	      var quill = this.initialize(_quill2.default, '');
-	      var delta = new _delta2.default().insert('test').insert('123', { bold: true }).insert('\n');
+	      var delta = new _quillDelta2.default().insert('test').insert('123', { bold: true }).insert('\n');
 	      quill.setContents(delta.ops);
 	      expect(quill.getContents()).toEqual(delta);
 	    });
@@ -12025,13 +12504,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var quill = this.initialize(_quill2.default, '');
 	      var delta = { ops: [{ insert: 'test\n' }] };
 	      quill.setContents(delta);
-	      expect(quill.getContents()).toEqual(new _delta2.default(delta));
+	      expect(quill.getContents()).toEqual(new _quillDelta2.default(delta));
 	    });
 
 	    it('no trailing newline', function () {
 	      var quill = this.initialize(_quill2.default, '<h1>Welcome</h1>');
-	      quill.setContents(new _delta2.default().insert('0123'));
-	      expect(quill.getContents()).toEqual(new _delta2.default().insert('0123\n'));
+	      quill.setContents(new _quillDelta2.default().insert('0123'));
+	      expect(quill.getContents()).toEqual(new _quillDelta2.default().insert('0123\n'));
 	    });
 	  });
 
@@ -12106,15 +12585,38 @@ return /******/ (function(modules) { // webpackBootstrap
 	      _theme2.default.DEFAULTS.modules = oldModules;
 	    });
 
-	    it('theme defaults', function () {
-	      var config = (0, _quill.expandConfig)('#test-container', {
-	        modules: {
-	          toolbar: true
-	        },
-	        theme: 'snow'
+	    describe('theme defaults', function () {
+	      it('for Snow', function () {
+	        var config = (0, _quill.expandConfig)('#test-container', {
+	          modules: {
+	            toolbar: true
+	          },
+	          theme: 'snow'
+	        });
+	        expect(config.theme).toEqual(_snow2.default);
+	        expect(config.modules.toolbar.handlers.image).toEqual(_snow2.default.DEFAULTS.modules.toolbar.handlers.image);
 	      });
-	      expect(config.theme).toEqual(_snow2.default);
-	      expect(config.modules.toolbar.handlers.image).toEqual(_snow2.default.DEFAULTS.modules.toolbar.handlers.image);
+
+	      it('for false', function () {
+	        var config = (0, _quill.expandConfig)('#test-container', {
+	          theme: false
+	        });
+	        expect(config.theme).toEqual(_theme2.default);
+	      });
+
+	      it('for undefined', function () {
+	        var config = (0, _quill.expandConfig)('#test-container', {
+	          theme: undefined
+	        });
+	        expect(config.theme).toEqual(_theme2.default);
+	      });
+
+	      it('for null', function () {
+	        var config = (0, _quill.expandConfig)('#test-container', {
+	          theme: null
+	        });
+	        expect(config.theme).toEqual(_theme2.default);
+	      });
 	    });
 
 	    it('quill < module < theme < user', function () {
@@ -12155,6 +12657,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	      });
 	      expect(config.modules.toolbar).toEqual(_toolbar2.default.DEFAULTS);
+	    });
+
+	    it('toolbar disabled', function () {
+	      var config = (0, _quill.expandConfig)('#test-container', {
+	        modules: {
+	          toolbar: false
+	        },
+	        theme: 'snow'
+	      });
+	      expect(config.modules.toolbar).toBe(undefined);
 	    });
 
 	    it('toolbar selector', function () {
@@ -12507,14 +13019,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 
 /***/ }),
-/* 118 */
+/* 119 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _delta = __webpack_require__(20);
+	var _quillDelta = __webpack_require__(20);
 
-	var _delta2 = _interopRequireDefault(_delta);
+	var _quillDelta2 = _interopRequireDefault(_quillDelta);
 
 	var _editor = __webpack_require__(27);
 
@@ -12526,14 +13038,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  it('add', function () {
 	    var editor = this.initialize(_editor2.default, '<p>0123</p>');
 	    editor.formatText(1, 2, { color: 'red' });
-	    expect(editor.getDelta()).toEqual(new _delta2.default().insert('0').insert('12', { color: 'red' }).insert('3\n'));
+	    expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('0').insert('12', { color: 'red' }).insert('3\n'));
 	    expect(editor.scroll.domNode).toEqualHTML('<p>0<span style="color: red;">12</span>3</p>');
 	  });
 
 	  it('remove', function () {
 	    var editor = this.initialize(_editor2.default, '<p>0<strong style="color: red;">12</strong>3</p>');
 	    editor.formatText(1, 2, { color: false });
-	    var delta = new _delta2.default().insert('0').insert('12', { bold: true }).insert('3\n');
+	    var delta = new _quillDelta2.default().insert('0').insert('12', { bold: true }).insert('3\n');
 	    expect(editor.getDelta()).toEqual(delta);
 	    expect(editor.scroll.domNode).toEqualHTML('<p>0<strong>12</strong>3</p>');
 	  });
@@ -12541,7 +13053,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  it('remove unwrap', function () {
 	    var editor = this.initialize(_editor2.default, '<p>0<span style="color: red;">12</span>3</p>');
 	    editor.formatText(1, 2, { color: false });
-	    expect(editor.getDelta()).toEqual(new _delta2.default().insert('0123\n'));
+	    expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('0123\n'));
 	    expect(editor.scroll.domNode).toEqualHTML('<p>0123</p>');
 	  });
 
@@ -12549,20 +13061,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var editor = this.initialize(_editor2.default, '<p>0123</p>');
 	    var initial = editor.scroll.domNode.innerHTML;
 	    editor.formatText(4, 1, { color: 'red' });
-	    expect(editor.getDelta()).toEqual(new _delta2.default().insert('0123\n'));
+	    expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('0123\n'));
 	    expect(editor.scroll.domNode).toEqualHTML(initial);
 	  });
 	});
 
 /***/ }),
-/* 119 */
+/* 120 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _delta = __webpack_require__(20);
+	var _quillDelta = __webpack_require__(20);
 
-	var _delta2 = _interopRequireDefault(_delta);
+	var _quillDelta2 = _interopRequireDefault(_quillDelta);
 
 	var _editor = __webpack_require__(27);
 
@@ -12578,41 +13090,41 @@ return /******/ (function(modules) { // webpackBootstrap
 	  it('add', function () {
 	    var editor = this.initialize(_editor2.default, '<p>0123</p>');
 	    editor.formatText(1, 2, { link: 'https://quilljs.com' });
-	    expect(editor.getDelta()).toEqual(new _delta2.default().insert('0').insert('12', { link: 'https://quilljs.com' }).insert('3\n'));
+	    expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('0').insert('12', { link: 'https://quilljs.com' }).insert('3\n'));
 	    expect(editor.scroll.domNode).toEqualHTML('<p>0<a href="https://quilljs.com" target="_blank">12</a>3</p>');
 	  });
 
 	  it('add invalid', function () {
 	    var editor = this.initialize(_editor2.default, '<p>0123</p>');
 	    editor.formatText(1, 2, { link: 'javascript:alert(0);' });
-	    expect(editor.getDelta()).toEqual(new _delta2.default().insert('0').insert('12', { link: _link2.default.SANITIZED_URL }).insert('3\n'));
+	    expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('0').insert('12', { link: _link2.default.SANITIZED_URL }).insert('3\n'));
 	  });
 
 	  it('change', function () {
 	    var editor = this.initialize(_editor2.default, '<p>0<a href="https://github.com" target="_blank">12</a>3</p>');
 	    editor.formatText(1, 2, { link: 'https://quilljs.com' });
-	    expect(editor.getDelta()).toEqual(new _delta2.default().insert('0').insert('12', { link: 'https://quilljs.com' }).insert('3\n'));
+	    expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('0').insert('12', { link: 'https://quilljs.com' }).insert('3\n'));
 	    expect(editor.scroll.domNode).toEqualHTML('<p>0<a href="https://quilljs.com" target="_blank">12</a>3</p>');
 	  });
 
 	  it('remove', function () {
 	    var editor = this.initialize(_editor2.default, '<p>0<a class="ql-size-large" href="https://quilljs.com" target="_blank">12</a>3</p>');
 	    editor.formatText(1, 2, { link: false });
-	    var delta = new _delta2.default().insert('0').insert('12', { size: 'large' }).insert('3\n');
+	    var delta = new _quillDelta2.default().insert('0').insert('12', { size: 'large' }).insert('3\n');
 	    expect(editor.getDelta()).toEqual(delta);
 	    expect(editor.scroll.domNode).toEqualHTML('<p>0<span class="ql-size-large">12</span>3</p>');
 	  });
 	});
 
 /***/ }),
-/* 120 */
+/* 121 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _delta = __webpack_require__(20);
+	var _quillDelta = __webpack_require__(20);
 
-	var _delta2 = _interopRequireDefault(_delta);
+	var _quillDelta2 = _interopRequireDefault(_quillDelta);
 
 	var _editor = __webpack_require__(27);
 
@@ -12641,14 +13153,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 
 /***/ }),
-/* 121 */
+/* 122 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _delta = __webpack_require__(20);
+	var _quillDelta = __webpack_require__(20);
 
-	var _delta2 = _interopRequireDefault(_delta);
+	var _quillDelta2 = _interopRequireDefault(_quillDelta);
 
 	var _editor = __webpack_require__(27);
 
@@ -12660,14 +13172,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  it('add', function () {
 	    var editor = this.initialize(_editor2.default, '<p>0123</p>');
 	    editor.formatText(4, 1, { align: 'center' });
-	    expect(editor.getDelta()).toEqual(new _delta2.default().insert('0123').insert('\n', { align: 'center' }));
+	    expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('0123').insert('\n', { align: 'center' }));
 	    expect(editor.scroll.domNode).toEqualHTML('<p class="ql-align-center">0123</p>');
 	  });
 
 	  it('remove', function () {
 	    var editor = this.initialize(_editor2.default, '<p class="ql-align-center">0123</p>');
 	    editor.formatText(4, 1, { align: false });
-	    expect(editor.getDelta()).toEqual(new _delta2.default().insert('0123\n'));
+	    expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('0123\n'));
 	    expect(editor.scroll.domNode).toEqualHTML('<p>0123</p>');
 	  });
 
@@ -12675,7 +13187,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var editor = this.initialize(_editor2.default, '<p class="ql-align-center">0123</p>');
 	    var initial = editor.scroll.domNode.innerHTML;
 	    editor.formatText(4, 1, { align: 'middle' });
-	    expect(editor.getDelta()).toEqual(new _delta2.default().insert('0123').insert('\n', { align: 'center' }));
+	    expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('0123').insert('\n', { align: 'center' }));
 	    expect(editor.scroll.domNode).toEqualHTML(initial);
 	  });
 
@@ -12683,13 +13195,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var editor = this.initialize(_editor2.default, '<p>0123</p>');
 	    var initial = editor.scroll.domNode.innerHTML;
 	    editor.formatText(1, 2, { align: 'center' });
-	    expect(editor.getDelta()).toEqual(new _delta2.default().insert('0123\n'));
+	    expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('0123\n'));
 	    expect(editor.scroll.domNode).toEqualHTML(initial);
 	  });
 	});
 
 /***/ }),
-/* 122 */
+/* 123 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -12698,9 +13210,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _parchment2 = _interopRequireDefault(_parchment);
 
-	var _delta = __webpack_require__(20);
+	var _quillDelta = __webpack_require__(20);
 
-	var _delta2 = _interopRequireDefault(_delta);
+	var _quillDelta2 = _interopRequireDefault(_quillDelta);
 
 	var _editor = __webpack_require__(27);
 
@@ -12745,90 +13257,90 @@ return /******/ (function(modules) { // webpackBootstrap
 	  it('add', function () {
 	    var editor = this.initialize(_editor2.default, '<p><em>0123</em></p><p>5678</p>');
 	    editor.formatLine(2, 5, { 'code-block': true });
-	    expect(editor.getDelta()).toEqual(new _delta2.default().insert('0123').insert('\n', { 'code-block': true }).insert('5678').insert('\n', { 'code-block': true }));
+	    expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('0123').insert('\n', { 'code-block': true }).insert('5678').insert('\n', { 'code-block': true }));
 	    expect(editor.scroll.domNode.innerHTML).toEqual('<pre spellcheck="false">0123\n5678\n</pre>');
 	  });
 
 	  it('remove', function () {
 	    var editor = this.initialize(_editor2.default, { html: '<pre>0123\n</pre>' });
 	    editor.formatText(4, 1, { 'code-block': false });
-	    expect(editor.getDelta()).toEqual(new _delta2.default().insert('0123\n'));
+	    expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('0123\n'));
 	    expect(editor.scroll.domNode).toEqualHTML('<p>0123</p>');
 	  });
 
 	  it('delete merge before', function () {
 	    var editor = this.initialize(_editor2.default, { html: '<h1>0123</h1><pre>4567\n</pre>' });
 	    editor.deleteText(4, 1);
-	    expect(editor.getDelta()).toEqual(new _delta2.default().insert('01234567').insert('\n', { 'code-block': true }));
+	    expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('01234567').insert('\n', { 'code-block': true }));
 	    expect(editor.scroll.domNode).toEqualHTML('<pre>01234567\n</pre>');
 	  });
 
 	  it('delete merge after', function () {
 	    var editor = this.initialize(_editor2.default, { html: '<pre>0123\n</pre><h1>4567</h1>' });
 	    editor.deleteText(4, 1);
-	    expect(editor.getDelta()).toEqual(new _delta2.default().insert('01234567').insert('\n', { header: 1 }));
+	    expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('01234567').insert('\n', { header: 1 }));
 	    expect(editor.scroll.domNode).toEqualHTML('<h1>01234567</h1>');
 	  });
 
 	  it('replace', function () {
 	    var editor = this.initialize(_editor2.default, { html: '<pre>0123\n</pre>' });
 	    editor.formatText(4, 1, { 'header': 1 });
-	    expect(editor.getDelta()).toEqual(new _delta2.default().insert('0123').insert('\n', { header: 1 }));
+	    expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('0123').insert('\n', { header: 1 }));
 	    expect(editor.scroll.domNode).toEqualHTML('<h1>0123</h1>');
 	  });
 
 	  it('replace multiple', function () {
 	    var editor = this.initialize(_editor2.default, { html: '<pre>01\n23\n</pre>' });
 	    editor.formatText(0, 6, { 'header': 1 });
-	    expect(editor.getDelta()).toEqual(new _delta2.default().insert('01').insert('\n', { header: 1 }).insert('23').insert('\n', { header: 1 }));
+	    expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('01').insert('\n', { header: 1 }).insert('23').insert('\n', { header: 1 }));
 	    expect(editor.scroll.domNode).toEqualHTML('<h1>01</h1><h1>23</h1>');
 	  });
 
 	  it('format interior line', function () {
 	    var editor = this.initialize(_editor2.default, { html: '<pre>01\n23\n45\n</pre>' });
 	    editor.formatText(5, 1, { 'header': 1 });
-	    expect(editor.getDelta()).toEqual(new _delta2.default().insert('01').insert('\n', { 'code-block': true }).insert('23').insert('\n', { 'header': 1 }).insert('45').insert('\n', { 'code-block': true }));
+	    expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('01').insert('\n', { 'code-block': true }).insert('23').insert('\n', { 'header': 1 }).insert('45').insert('\n', { 'code-block': true }));
 	    expect(editor.scroll.domNode.innerHTML).toEqual('<pre>01\n</pre><h1>23</h1><pre>45\n</pre>');
 	  });
 
 	  it('format imprecise bounds', function () {
 	    var editor = this.initialize(_editor2.default, { html: '<pre>01\n23\n45\n</pre>' });
 	    editor.formatText(1, 6, { 'header': 1 });
-	    expect(editor.getDelta()).toEqual(new _delta2.default().insert('01').insert('\n', { 'header': 1 }).insert('23').insert('\n', { 'header': 1 }).insert('45').insert('\n', { 'code-block': true }));
+	    expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('01').insert('\n', { 'header': 1 }).insert('23').insert('\n', { 'header': 1 }).insert('45').insert('\n', { 'code-block': true }));
 	    expect(editor.scroll.domNode.innerHTML).toEqual('<h1>01</h1><h1>23</h1><pre>45\n</pre>');
 	  });
 
 	  it('format without newline', function () {
 	    var editor = this.initialize(_editor2.default, { html: '<pre>01\n23\n45\n</pre>' });
 	    editor.formatText(3, 1, { 'header': 1 });
-	    expect(editor.getDelta()).toEqual(new _delta2.default().insert('01').insert('\n', { 'code-block': true }).insert('23').insert('\n', { 'code-block': true }).insert('45').insert('\n', { 'code-block': true }));
+	    expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('01').insert('\n', { 'code-block': true }).insert('23').insert('\n', { 'code-block': true }).insert('45').insert('\n', { 'code-block': true }));
 	    expect(editor.scroll.domNode.innerHTML).toEqual('<pre>01\n23\n45\n</pre>');
 	  });
 
 	  it('format line', function () {
 	    var editor = this.initialize(_editor2.default, { html: '<pre>01\n23\n45\n</pre>' });
 	    editor.formatLine(3, 1, { 'header': 1 });
-	    expect(editor.getDelta()).toEqual(new _delta2.default().insert('01').insert('\n', { 'code-block': true }).insert('23').insert('\n', { 'header': 1 }).insert('45').insert('\n', { 'code-block': true }));
+	    expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('01').insert('\n', { 'code-block': true }).insert('23').insert('\n', { 'header': 1 }).insert('45').insert('\n', { 'code-block': true }));
 	    expect(editor.scroll.domNode.innerHTML).toEqual('<pre>01\n</pre><h1>23</h1><pre>45\n</pre>');
 	  });
 
 	  it('ignore formatAt', function () {
 	    var editor = this.initialize(_editor2.default, '<pre>0123</pre>');
 	    editor.formatText(1, 1, { bold: true });
-	    expect(editor.getDelta()).toEqual(new _delta2.default().insert('0123').insert('\n', { 'code-block': true }));
+	    expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('0123').insert('\n', { 'code-block': true }));
 	    expect(editor.scroll.domNode).toEqualHTML('<pre>0123</pre>');
 	  });
 	});
 
 /***/ }),
-/* 123 */
+/* 124 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _delta = __webpack_require__(20);
+	var _quillDelta = __webpack_require__(20);
 
-	var _delta2 = _interopRequireDefault(_delta);
+	var _quillDelta2 = _interopRequireDefault(_quillDelta);
 
 	var _editor = __webpack_require__(27);
 
@@ -12840,34 +13352,34 @@ return /******/ (function(modules) { // webpackBootstrap
 	  it('add', function () {
 	    var editor = this.initialize(_editor2.default, '<p><em>0123</em></p>');
 	    editor.formatText(4, 1, { header: 1 });
-	    expect(editor.getDelta()).toEqual(new _delta2.default().insert('0123', { italic: true }).insert('\n', { header: 1 }));
+	    expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('0123', { italic: true }).insert('\n', { header: 1 }));
 	    expect(editor.scroll.domNode).toEqualHTML('<h1><em>0123</em></h1>');
 	  });
 
 	  it('remove', function () {
 	    var editor = this.initialize(_editor2.default, '<h1><em>0123</em></h1>');
 	    editor.formatText(4, 1, { header: false });
-	    expect(editor.getDelta()).toEqual(new _delta2.default().insert('0123', { italic: true }).insert('\n'));
+	    expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('0123', { italic: true }).insert('\n'));
 	    expect(editor.scroll.domNode).toEqualHTML('<p><em>0123</em></p>');
 	  });
 
 	  it('change', function () {
 	    var editor = this.initialize(_editor2.default, '<h1><em>0123</em></h1>');
 	    editor.formatText(4, 1, { header: 2 });
-	    expect(editor.getDelta()).toEqual(new _delta2.default().insert('0123', { italic: true }).insert('\n', { header: 2 }));
+	    expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('0123', { italic: true }).insert('\n', { header: 2 }));
 	    expect(editor.scroll.domNode).toEqualHTML('<h2><em>0123</em></h2>');
 	  });
 	});
 
 /***/ }),
-/* 124 */
+/* 125 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _delta = __webpack_require__(20);
+	var _quillDelta = __webpack_require__(20);
 
-	var _delta2 = _interopRequireDefault(_delta);
+	var _quillDelta2 = _interopRequireDefault(_quillDelta);
 
 	var _editor = __webpack_require__(27);
 
@@ -12879,27 +13391,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	  it('+1', function () {
 	    var editor = this.initialize(_editor2.default, '<ul><li>0123</li></ul>');
 	    editor.formatText(4, 1, { 'indent': '+1' });
-	    expect(editor.getDelta()).toEqual(new _delta2.default().insert('0123').insert('\n', { list: 'bullet', indent: 1 }));
+	    expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('0123').insert('\n', { list: 'bullet', indent: 1 }));
 	    expect(editor.scroll.domNode).toEqualHTML('<ul><li class="ql-indent-1">0123</li></ul>');
 	  });
 
 	  it('-1', function () {
 	    var editor = this.initialize(_editor2.default, '<ul><li class="ql-indent-1">0123</li></ul>');
 	    editor.formatText(4, 1, { 'indent': '-1' });
-	    expect(editor.getDelta()).toEqual(new _delta2.default().insert('0123').insert('\n', { list: 'bullet' }));
+	    expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('0123').insert('\n', { list: 'bullet' }));
 	    expect(editor.scroll.domNode).toEqualHTML('<ul><li>0123</li></ul>');
 	  });
 	});
 
 /***/ }),
-/* 125 */
+/* 126 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _delta = __webpack_require__(20);
+	var _quillDelta = __webpack_require__(20);
 
-	var _delta2 = _interopRequireDefault(_delta);
+	var _quillDelta2 = _interopRequireDefault(_quillDelta);
 
 	var _editor = __webpack_require__(27);
 
@@ -12911,56 +13423,56 @@ return /******/ (function(modules) { // webpackBootstrap
 	  it('add', function () {
 	    var editor = this.initialize(_editor2.default, '\n      <p>0123</p>\n      <p>5678</p>\n      <p>0123</p>');
 	    editor.formatText(9, 1, { list: 'ordered' });
-	    expect(editor.getDelta()).toEqual(new _delta2.default().insert('0123\n5678').insert('\n', { list: 'ordered' }).insert('0123\n'));
+	    expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('0123\n5678').insert('\n', { list: 'ordered' }).insert('0123\n'));
 	    expect(this.container).toEqualHTML('\n      <p>0123</p>\n      <ol><li>5678</li></ol>\n      <p>0123</p>\n    ');
 	  });
 
 	  it('remove', function () {
 	    var editor = this.initialize(_editor2.default, '\n      <p>0123</p>\n      <ol><li>5678</li></ol>\n      <p>0123</p>\n    ');
 	    editor.formatText(9, 1, { list: null });
-	    expect(editor.getDelta()).toEqual(new _delta2.default().insert('0123\n5678\n0123\n'));
+	    expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('0123\n5678\n0123\n'));
 	    expect(this.container).toEqualHTML('\n      <p>0123</p>\n      <p>5678</p>\n      <p>0123</p>\n    ');
 	  });
 
 	  it('replace', function () {
 	    var editor = this.initialize(_editor2.default, '\n      <p>0123</p>\n      <ol><li>5678</li></ol>\n      <p>0123</p>\n    ');
 	    editor.formatText(9, 1, { list: 'bullet' });
-	    expect(editor.getDelta()).toEqual(new _delta2.default().insert('0123\n5678').insert('\n', { list: 'bullet' }).insert('0123\n'));
+	    expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('0123\n5678').insert('\n', { list: 'bullet' }).insert('0123\n'));
 	    expect(this.container).toEqualHTML('\n      <p>0123</p>\n      <ul><li>5678</li></ul>\n      <p>0123</p>\n    ');
 	  });
 
 	  it('replace with attributes', function () {
 	    var editor = this.initialize(_editor2.default, '<ol><li class="ql-align-center">0123</li></ol>');
 	    editor.formatText(4, 1, { list: 'bullet' });
-	    expect(editor.getDelta()).toEqual(new _delta2.default().insert('0123').insert('\n', { align: 'center', list: 'bullet' }));
+	    expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('0123').insert('\n', { align: 'center', list: 'bullet' }));
 	    expect(this.container).toEqualHTML('<ul><li class="ql-align-center">0123</li></ul>');
 	  });
 
 	  it('format merge', function () {
 	    var editor = this.initialize(_editor2.default, '\n      <ol><li>0123</li></ol>\n      <p>5678</p>\n      <ol><li>0123</li></ol>\n    ');
 	    editor.formatText(9, 1, { list: 'ordered' });
-	    expect(editor.getDelta()).toEqual(new _delta2.default().insert('0123').insert('\n', { list: 'ordered' }).insert('5678').insert('\n', { list: 'ordered' }).insert('0123').insert('\n', { list: 'ordered' }));
+	    expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('0123').insert('\n', { list: 'ordered' }).insert('5678').insert('\n', { list: 'ordered' }).insert('0123').insert('\n', { list: 'ordered' }));
 	    expect(this.container).toEqualHTML('\n      <ol>\n        <li>0123</li>\n        <li>5678</li>\n        <li>0123</li>\n      </ol>');
 	  });
 
 	  it('replace merge', function () {
 	    var editor = this.initialize(_editor2.default, '\n      <ol><li>0123</li></ol>\n      <ul><li>5678</li></ul>\n      <ol><li>0123</li></ol>');
 	    editor.formatText(9, 1, { list: 'ordered' });
-	    expect(editor.getDelta()).toEqual(new _delta2.default().insert('0123').insert('\n', { list: 'ordered' }).insert('5678').insert('\n', { list: 'ordered' }).insert('0123').insert('\n', { list: 'ordered' }));
+	    expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('0123').insert('\n', { list: 'ordered' }).insert('5678').insert('\n', { list: 'ordered' }).insert('0123').insert('\n', { list: 'ordered' }));
 	    expect(this.container).toEqualHTML('\n      <ol>\n        <li>0123</li>\n        <li>5678</li>\n        <li>0123</li>\n      </ol>');
 	  });
 
 	  it('delete merge', function () {
 	    var editor = this.initialize(_editor2.default, '\n      <ol><li>0123</li></ol>\n      <p>5678</p>\n      <ol><li>0123</li></ol>');
 	    editor.deleteText(5, 5);
-	    expect(editor.getDelta()).toEqual(new _delta2.default().insert('0123').insert('\n', { list: 'ordered' }).insert('0123').insert('\n', { list: 'ordered' }));
+	    expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('0123').insert('\n', { list: 'ordered' }).insert('0123').insert('\n', { list: 'ordered' }));
 	    expect(this.container).toEqualHTML('\n      <ol>\n        <li>0123</li>\n        <li>0123</li>\n      </ol>');
 	  });
 
 	  it('replace split', function () {
 	    var editor = this.initialize(_editor2.default, '\n      <ol>\n        <li>0123</li>\n        <li>5678</li>\n        <li>0123</li>\n      </ol>');
 	    editor.formatText(9, 1, { list: 'bullet' });
-	    expect(editor.getDelta()).toEqual(new _delta2.default().insert('0123').insert('\n', { list: 'ordered' }).insert('5678').insert('\n', { list: 'bullet' }).insert('0123').insert('\n', { list: 'ordered' }));
+	    expect(editor.getDelta()).toEqual(new _quillDelta2.default().insert('0123').insert('\n', { list: 'ordered' }).insert('5678').insert('\n', { list: 'bullet' }).insert('0123').insert('\n', { list: 'ordered' }));
 	    expect(this.container).toEqualHTML('\n      <ol><li>0123</li></ol>\n      <ul><li>5678</li></ul>\n      <ol><li>0123</li></ol>');
 	  });
 
@@ -13022,7 +13534,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 
 /***/ }),
-/* 126 */
+/* 127 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -13045,14 +13557,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 
 /***/ }),
-/* 127 */
+/* 128 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _delta = __webpack_require__(20);
+	var _quillDelta = __webpack_require__(20);
 
-	var _delta2 = _interopRequireDefault(_delta);
+	var _quillDelta2 = _interopRequireDefault(_quillDelta);
 
 	var _selection = __webpack_require__(40);
 
@@ -13065,13 +13577,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	describe('Clipboard', function () {
 	  describe('events', function () {
 	    beforeEach(function () {
-	      this.event = {
-	        clipboardData: {
-	          getData: function getData() {},
-	          setData: function setData() {}
-	        },
-	        preventDefault: function preventDefault() {}
-	      };
 	      this.quill = this.initialize(_core2.default, '<h1>0123</h1><p>5<em>67</em>8</p>');
 	      this.quill.setSelection(2, 5);
 	    });
@@ -13079,13 +13584,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	    it('paste', function (done) {
 	      var _this = this;
 
-	      this.event.clipboardData.types = ['text'];
-	      spyOn(this.event.clipboardData, 'getData').and.returnValue('|');
 	      this.quill.clipboard.container.innerHTML = '<strong>|</strong>';
-	      this.quill.clipboard.onPaste(this.event);
+	      this.quill.clipboard.onPaste({});
 	      setTimeout(function () {
 	        expect(_this.quill.root).toEqualHTML('<p>01<strong>|</strong><em>7</em>8</p>');
 	        expect(_this.quill.getSelection()).toEqual(new _selection.Range(3));
+	        done();
+	      }, 2);
+	    });
+
+	    it('selection-change', function (done) {
+	      var handler = {
+	        change: function change() {}
+	      };
+	      spyOn(handler, 'change');
+	      this.quill.on('selection-change', handler.change);
+	      this.quill.clipboard.container.innerHTML = '0';
+	      this.quill.clipboard.onPaste({});
+	      setTimeout(function () {
+	        expect(handler.change).not.toHaveBeenCalled();
 	        done();
 	      }, 2);
 	    });
@@ -13099,69 +13616,69 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    it('plain text', function () {
 	      var delta = this.clipboard.convert('simple plain text');
-	      expect(delta).toEqual(new _delta2.default().insert('simple plain text'));
+	      expect(delta).toEqual(new _quillDelta2.default().insert('simple plain text'));
 	    });
 
 	    it('whitespace', function () {
 	      var html = '<div> 0 </div> <div> <div> 1 2 <span> 3 </span> 4 </div> </div>' + '<div><span>5 </span><span>6 </span><span> 7</span><span> 8</span></div>';
 	      var delta = this.clipboard.convert(html);
-	      expect(delta).toEqual(new _delta2.default().insert('0\n1 2  3  4\n5 6  7 8'));
+	      expect(delta).toEqual(new _quillDelta2.default().insert('0\n1 2  3  4\n5 6  7 8'));
 	    });
 
 	    it('inline whitespace', function () {
 	      var html = '<p>0 <strong>1</strong> 2</p>';
 	      var delta = this.clipboard.convert(html);
-	      expect(delta).toEqual(new _delta2.default().insert('0 ').insert('1', { bold: true }).insert(' 2'));
+	      expect(delta).toEqual(new _quillDelta2.default().insert('0 ').insert('1', { bold: true }).insert(' 2'));
 	    });
 
 	    it('intentional whitespace', function () {
 	      var html = '0&nbsp;<strong>1</strong>&nbsp;2';
 	      var delta = this.clipboard.convert(html);
-	      expect(delta).toEqual(new _delta2.default().insert('0\xA0').insert('1', { bold: true }).insert('\xA02'));
+	      expect(delta).toEqual(new _quillDelta2.default().insert('0\xA0').insert('1', { bold: true }).insert('\xA02'));
 	    });
 
 	    it('consecutive intentional whitespace', function () {
 	      var html = '<strong>&nbsp;&nbsp;1&nbsp;&nbsp;</strong>';
 	      var delta = this.clipboard.convert(html);
-	      expect(delta).toEqual(new _delta2.default().insert('\xA0\xA01\xA0\xA0', { bold: true }));
+	      expect(delta).toEqual(new _quillDelta2.default().insert('\xA0\xA01\xA0\xA0', { bold: true }));
 	    });
 
 	    it('break', function () {
 	      var html = '<div>0<br>1</div><div>2<br></div><div>3</div><div><br>4</div><div><br></div><div>5</div>';
 	      var delta = this.clipboard.convert(html);
-	      expect(delta).toEqual(new _delta2.default().insert('0\n1\n2\n3\n\n4\n\n5'));
+	      expect(delta).toEqual(new _quillDelta2.default().insert('0\n1\n2\n3\n\n4\n\n5'));
 	    });
 
 	    it('alias', function () {
 	      var delta = this.clipboard.convert('<b>Bold</b><i>Italic</i>');
-	      expect(delta).toEqual(new _delta2.default().insert('Bold', { bold: true }).insert('Italic', { italic: true }));
+	      expect(delta).toEqual(new _quillDelta2.default().insert('Bold', { bold: true }).insert('Italic', { italic: true }));
 	    });
 
 	    it('pre', function () {
 	      var html = '<div style="white-space: pre;"> 01 \n 23 </div>';
 	      var delta = this.clipboard.convert(html);
-	      expect(delta).toEqual(new _delta2.default().insert(' 01 \n 23 '));
+	      expect(delta).toEqual(new _quillDelta2.default().insert(' 01 \n 23 '));
 	    });
 
 	    it('nested list', function () {
 	      var delta = this.clipboard.convert('<ol><li>One</li><li class="ql-indent-1">Alpha</li></ol>');
-	      expect(delta).toEqual(new _delta2.default().insert('One\n', { list: 'ordered' }).insert('Alpha\n', { list: 'ordered', indent: 1 }));
+	      expect(delta).toEqual(new _quillDelta2.default().insert('One\n', { list: 'ordered' }).insert('Alpha\n', { list: 'ordered', indent: 1 }));
 	    });
 
 	    it('embeds', function () {
 	      var delta = this.clipboard.convert('<div>01<img src="/assets/favicon.png" height="200" width="300">34</div>');
-	      var expected = new _delta2.default().insert('01').insert({ image: '/assets/favicon.png' }, { height: '200', width: '300' }).insert('34');
+	      var expected = new _quillDelta2.default().insert('01').insert({ image: '/assets/favicon.png' }, { height: '200', width: '300' }).insert('34');
 	      expect(delta).toEqual(expected);
 	    });
 
 	    it('block embed', function () {
 	      var delta = this.clipboard.convert('<p>01</p><iframe src="#"></iframe><p>34</p>');
-	      expect(delta).toEqual(new _delta2.default().insert('01\n').insert({ video: '#' }).insert('34'));
+	      expect(delta).toEqual(new _quillDelta2.default().insert('01\n').insert({ video: '#' }).insert('34'));
 	    });
 
 	    it('attributor and style match', function () {
 	      var delta = this.clipboard.convert('<p style="direction:rtl;">Test</p>');
-	      expect(delta).toEqual(new _delta2.default().insert('Test\n', { direction: 'rtl' }));
+	      expect(delta).toEqual(new _quillDelta2.default().insert('Test\n', { direction: 'rtl' }));
 	    });
 
 	    it('custom matcher', function () {
@@ -13169,7 +13686,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var index = 0;
 	        var regex = /https?:\/\/[^\s]+/g;
 	        var match = null;
-	        var composer = new _delta2.default();
+	        var composer = new _quillDelta2.default();
 	        while ((match = regex.exec(node.data)) !== null) {
 	          composer.retain(match.index - index);
 	          index = regex.lastIndex;
@@ -13178,21 +13695,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return delta.compose(composer);
 	      });
 	      var delta = this.clipboard.convert('http://github.com https://quilljs.com');
-	      var expected = new _delta2.default().insert('http://github.com', { link: 'http://github.com' }).insert(' ').insert('https://quilljs.com', { link: 'https://quilljs.com' });
+	      var expected = new _quillDelta2.default().insert('http://github.com', { link: 'http://github.com' }).insert(' ').insert('https://quilljs.com', { link: 'https://quilljs.com' });
 	      expect(delta).toEqual(expected);
 	    });
 	  });
 	});
 
 /***/ }),
-/* 128 */
+/* 129 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _delta = __webpack_require__(20);
+	var _quillDelta = __webpack_require__(20);
 
-	var _delta2 = _interopRequireDefault(_delta);
+	var _quillDelta2 = _interopRequireDefault(_quillDelta);
 
 	var _core = __webpack_require__(1);
 
@@ -13205,52 +13722,52 @@ return /******/ (function(modules) { // webpackBootstrap
 	describe('History', function () {
 	  describe('getLastChangeIndex', function () {
 	    it('delete', function () {
-	      var delta = new _delta2.default().retain(4).delete(2);
+	      var delta = new _quillDelta2.default().retain(4).delete(2);
 	      expect((0, _history.getLastChangeIndex)(delta)).toEqual(4);
 	    });
 
 	    it('delete with inserts', function () {
-	      var delta = new _delta2.default().retain(4).insert('test').delete(2);
+	      var delta = new _quillDelta2.default().retain(4).insert('test').delete(2);
 	      expect((0, _history.getLastChangeIndex)(delta)).toEqual(8);
 	    });
 
 	    it('insert text', function () {
-	      var delta = new _delta2.default().retain(4).insert('testing');
+	      var delta = new _quillDelta2.default().retain(4).insert('testing');
 	      expect((0, _history.getLastChangeIndex)(delta)).toEqual(11);
 	    });
 
 	    it('insert embed', function () {
-	      var delta = new _delta2.default().retain(4).insert({ image: true });
+	      var delta = new _quillDelta2.default().retain(4).insert({ image: true });
 	      expect((0, _history.getLastChangeIndex)(delta)).toEqual(5);
 	    });
 
 	    it('insert with deletes', function () {
-	      var delta = new _delta2.default().retain(4).delete(3).insert('!');
+	      var delta = new _quillDelta2.default().retain(4).delete(3).insert('!');
 	      expect((0, _history.getLastChangeIndex)(delta)).toEqual(5);
 	    });
 
 	    it('format', function () {
-	      var delta = new _delta2.default().retain(4).retain(3, { bold: true });
+	      var delta = new _quillDelta2.default().retain(4).retain(3, { bold: true });
 	      expect((0, _history.getLastChangeIndex)(delta)).toEqual(7);
 	    });
 
 	    it('format newline', function () {
-	      var delta = new _delta2.default().retain(4).retain(1, { align: 'left' });
+	      var delta = new _quillDelta2.default().retain(4).retain(1, { align: 'left' });
 	      expect((0, _history.getLastChangeIndex)(delta)).toEqual(4);
 	    });
 
 	    it('format mixed', function () {
-	      var delta = new _delta2.default().retain(4).retain(1, { align: 'left', bold: true });
+	      var delta = new _quillDelta2.default().retain(4).retain(1, { align: 'left', bold: true });
 	      expect((0, _history.getLastChangeIndex)(delta)).toEqual(4);
 	    });
 
 	    it('insert newline', function () {
-	      var delta = new _delta2.default().retain(4).insert('a\n');
+	      var delta = new _quillDelta2.default().retain(4).insert('a\n');
 	      expect((0, _history.getLastChangeIndex)(delta)).toEqual(5);
 	    });
 
 	    it('mutliple newline inserts', function () {
-	      var delta = new _delta2.default().retain(4).insert('ab\n\n');
+	      var delta = new _quillDelta2.default().retain(4).insert('ab\n\n');
 	      expect((0, _history.getLastChangeIndex)(delta)).toEqual(7);
 	    });
 	  });
@@ -13266,6 +13783,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.original = this.quill.getContents();
 	    });
 
+	    it('limits undo stack size', function () {
+	      var quill = new _core2.default(this.container.firstChild, {
+	        modules: {
+	          history: { delay: 0, maxStack: 2 }
+	        }
+	      });
+
+	      ['A', 'B', 'C'].forEach(function (text) {
+	        return quill.insertText(0, text);
+	      });
+	      expect(quill.history.stack.undo.length).toEqual(2);
+	    });
+
 	    it('user change', function () {
 	      this.quill.root.firstChild.innerHTML = 'The lazy foxes';
 	      this.quill.update();
@@ -13279,9 +13809,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    it('merge changes', function () {
 	      expect(this.quill.history.stack.undo.length).toEqual(0);
-	      this.quill.updateContents(new _delta2.default().retain(12).insert('e'));
+	      this.quill.updateContents(new _quillDelta2.default().retain(12).insert('e'));
 	      expect(this.quill.history.stack.undo.length).toEqual(1);
-	      this.quill.updateContents(new _delta2.default().retain(13).insert('s'));
+	      this.quill.updateContents(new _quillDelta2.default().retain(13).insert('s'));
 	      expect(this.quill.history.stack.undo.length).toEqual(1);
 	      this.quill.history.undo();
 	      expect(this.quill.getContents()).toEqual(this.original);
@@ -13292,10 +13822,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var _this = this;
 
 	      expect(this.quill.history.stack.undo.length).toEqual(0);
-	      this.quill.updateContents(new _delta2.default().retain(12).insert('e'));
+	      this.quill.updateContents(new _quillDelta2.default().retain(12).insert('e'));
 	      expect(this.quill.history.stack.undo.length).toEqual(1);
 	      setTimeout(function () {
-	        _this.quill.updateContents(new _delta2.default().retain(13).insert('s'));
+	        _this.quill.updateContents(new _quillDelta2.default().retain(13).insert('s'));
 	        expect(_this.quill.history.stack.undo.length).toEqual(2);
 	        done();
 	      }, this.quill.history.options.delay * 1.25);
@@ -13305,10 +13835,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var _this2 = this;
 
 	      expect(this.quill.history.stack.undo.length).toEqual(0);
-	      this.quill.updateContents(new _delta2.default().retain(12).insert('e'));
+	      this.quill.updateContents(new _quillDelta2.default().retain(12).insert('e'));
 	      var contents = this.quill.getContents();
 	      setTimeout(function () {
-	        _this2.quill.updateContents(new _delta2.default().retain(13).insert('s'));
+	        _this2.quill.updateContents(new _quillDelta2.default().retain(13).insert('s'));
 	        _this2.quill.history.undo();
 	        expect(_this2.quill.getContents()).toEqual(contents);
 	        _this2.quill.history.undo();
@@ -13319,34 +13849,34 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    it('transform api change', function () {
 	      this.quill.history.options.userOnly = true;
-	      this.quill.updateContents(new _delta2.default().retain(12).insert('es'), _core2.default.sources.USER);
+	      this.quill.updateContents(new _quillDelta2.default().retain(12).insert('es'), _core2.default.sources.USER);
 	      this.quill.history.lastRecorded = 0;
-	      this.quill.updateContents(new _delta2.default().retain(14).insert('!'), _core2.default.sources.USER);
+	      this.quill.updateContents(new _quillDelta2.default().retain(14).insert('!'), _core2.default.sources.USER);
 	      this.quill.history.undo();
-	      this.quill.updateContents(new _delta2.default().retain(4).delete(5), _core2.default.sources.API);
-	      expect(this.quill.getContents()).toEqual(new _delta2.default().insert('The foxes\n'));
+	      this.quill.updateContents(new _quillDelta2.default().retain(4).delete(5), _core2.default.sources.API);
+	      expect(this.quill.getContents()).toEqual(new _quillDelta2.default().insert('The foxes\n'));
 	      this.quill.history.undo();
-	      expect(this.quill.getContents()).toEqual(new _delta2.default().insert('The fox\n'));
+	      expect(this.quill.getContents()).toEqual(new _quillDelta2.default().insert('The fox\n'));
 	      this.quill.history.redo();
-	      expect(this.quill.getContents()).toEqual(new _delta2.default().insert('The foxes\n'));
+	      expect(this.quill.getContents()).toEqual(new _quillDelta2.default().insert('The foxes\n'));
 	      this.quill.history.redo();
-	      expect(this.quill.getContents()).toEqual(new _delta2.default().insert('The foxes!\n'));
+	      expect(this.quill.getContents()).toEqual(new _quillDelta2.default().insert('The foxes!\n'));
 	    });
 
 	    it('transform preserve intention', function () {
 	      var url = 'https://www.google.com/';
 	      this.quill.history.options.userOnly = true;
-	      this.quill.updateContents(new _delta2.default().insert(url, { link: url }), _core2.default.sources.USER);
+	      this.quill.updateContents(new _quillDelta2.default().insert(url, { link: url }), _core2.default.sources.USER);
 	      this.quill.history.lastRecorded = 0;
-	      this.quill.updateContents(new _delta2.default().delete(url.length).insert('Google', { link: url }), _core2.default.sources.API);
+	      this.quill.updateContents(new _quillDelta2.default().delete(url.length).insert('Google', { link: url }), _core2.default.sources.API);
 	      this.quill.history.lastRecorded = 0;
-	      this.quill.updateContents(new _delta2.default().retain(this.quill.getLength() - 1).insert('!'), _core2.default.sources.USER);
+	      this.quill.updateContents(new _quillDelta2.default().retain(this.quill.getLength() - 1).insert('!'), _core2.default.sources.USER);
 	      this.quill.history.lastRecorded = 0;
-	      expect(this.quill.getContents()).toEqual(new _delta2.default().insert('Google', { link: url }).insert('The lazy fox!\n'));
+	      expect(this.quill.getContents()).toEqual(new _quillDelta2.default().insert('Google', { link: url }).insert('The lazy fox!\n'));
 	      this.quill.history.undo();
-	      expect(this.quill.getContents()).toEqual(new _delta2.default().insert('Google', { link: url }).insert('The lazy fox\n'));
+	      expect(this.quill.getContents()).toEqual(new _quillDelta2.default().insert('Google', { link: url }).insert('The lazy fox\n'));
 	      this.quill.history.undo();
-	      expect(this.quill.getContents()).toEqual(new _delta2.default().insert('Google', { link: url }).insert('The lazy fox\n'));
+	      expect(this.quill.getContents()).toEqual(new _quillDelta2.default().insert('Google', { link: url }).insert('The lazy fox\n'));
 	    });
 
 	    it('ignore remote changes', function () {
@@ -13371,7 +13901,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 
 /***/ }),
-/* 129 */
+/* 130 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -13470,12 +14000,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 
 /***/ }),
-/* 130 */
+/* 131 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _picker = __webpack_require__(102);
+	var _picker = __webpack_require__(103);
 
 	var _picker2 = _interopRequireDefault(_picker);
 
