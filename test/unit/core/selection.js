@@ -1,4 +1,4 @@
-import Delta from 'rich-text/lib/delta';
+import Delta from 'quill-delta';
 import Selection, { Range } from '../../../core/selection';
 import Cursor from '../../../blots/cursor';
 import Scroll from '../../../blots/scroll';
@@ -136,12 +136,6 @@ describe('Selection', function() {
       let [range, ] = selection.getRange();
       expect(range.index).toEqual(3);
       expect(range.length).toEqual(4);
-    });
-
-    it('no focus', function() {
-      let selection = this.initialize(Selection, '');
-      let [range, ] = selection.getRange();
-      expect(range).toEqual(null);
     });
 
     it('wrong input', function() {

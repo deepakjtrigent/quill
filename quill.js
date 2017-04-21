@@ -1,7 +1,7 @@
 import Quill from './core';
 
-import { AlignClass, AlignStyle } from './formats/align';
-import { DirectionClass, DirectionStyle } from './formats/direction';
+import { AlignAttribute, AlignClass, AlignStyle } from './formats/align';
+import { DirectionAttribute, DirectionClass, DirectionStyle } from './formats/direction';
 import { IndentClass as Indent } from './formats/indent';
 
 import Blockquote from './formats/blockquote';
@@ -29,6 +29,7 @@ import Formula from './modules/formula';
 import Syntax from './modules/syntax';
 import Toolbar from './modules/toolbar';
 import MultiCursor from './modules/multi-cursor';
+import Authorship from './modules/authorship';
 
 import Icons from './ui/icons';
 import Picker from './ui/picker';
@@ -41,6 +42,8 @@ import SnowTheme from './themes/snow';
 
 
 Quill.register({
+  'attributors/attribute/direction': DirectionAttribute,
+
   'attributors/class/align': AlignClass,
   'attributors/class/background': BackgroundClass,
   'attributors/class/color': ColorClass,
@@ -89,6 +92,7 @@ Quill.register({
   'modules/syntax': Syntax,
   'modules/toolbar': Toolbar,
   'modules/multi-cursor': MultiCursor,
+  'modules/authorship': Authorship,
 
   'themes/bubble': BubbleTheme,
   'themes/snow': SnowTheme,
